@@ -1,0 +1,928 @@
+2026-01-20 11:10:16,315 - INFO - Scraping URL: https://en.wikipedia.org/wiki/Innate_immune_system
+2026-01-20 11:10:16,345 - INFO - ⚠️EXCEPTION IN scrape_wikipedia_article: lxml.html.clean module is now a separate project lxml_html_clean.
+Install lxml[html_clean] or lxml_html_clean directly.
+2026-01-20 11:10:16,347 - INFO - Scraping URL: https://en.wikipedia.org/wiki/Immune_response
+2026-01-20 11:10:16,348 - INFO - ⚠️EXCEPTION IN scrape_wikipedia_article: lxml.html.clean module is now a separate project lxml_html_clean.
+Install lxml[html_clean] or lxml_html_clean directly.
+2026-01-20 11:10:16,349 - INFO - Scraping URL: https://en.wikipedia.org/wiki/Immunology
+2026-01-20 11:10:16,350 - INFO - ⚠️EXCEPTION IN scrape_wikipedia_article: lxml.html.clean module is now a separate project lxml_html_clean.
+Install lxml[html_clean] or lxml_html_clean directly.
+2026-01-20 11:10:16,351 - INFO - Scraping URL: https://en.wikipedia.org/wiki/Adaptive_immune_system
+2026-01-20 11:10:16,352 - INFO - ⚠️EXCEPTION IN scrape_wikipedia_article: lxml.html.clean module is now a separate project lxml_html_clean.
+Install lxml[html_clean] or lxml_html_clean directly.
+2026-01-20 11:10:16,353 - INFO - Scraping URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 11:10:16,354 - INFO - ⚠️EXCEPTION IN scrape_wikipedia_article: lxml.html.clean module is now a separate project lxml_html_clean.
+Install lxml[html_clean] or lxml_html_clean directly.
+2026-01-20 11:10:16,355 - INFO - Scraping URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 11:10:16,357 - INFO - ⚠️EXCEPTION IN scrape_wikipedia_article: lxml.html.clean module is now a separate project lxml_html_clean.
+Install lxml[html_clean] or lxml_html_clean directly.
+2026-01-20 11:11:04,503 - INFO - Scraping URL: https://en.wikipedia.org/wiki/Innate_immune_system
+2026-01-20 11:11:05,374 - INFO - Scraping URL: https://en.wikipedia.org/wiki/Immune_response
+2026-01-20 11:11:05,836 - INFO - Scraping URL: https://en.wikipedia.org/wiki/Immunology
+2026-01-20 11:11:06,621 - INFO - Scraping URL: https://en.wikipedia.org/wiki/Adaptive_immune_system
+2026-01-20 11:11:07,340 - INFO - Scraping URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 11:11:08,565 - INFO - Scraping URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 11:12:47,032 - INFO - ⚠️EXCEPTION IN __init__: Repo id must be in the form 'repo_name' or 'namespace/repo_name': 'https://storage.googleapis.com/huggingface-nlp/datasets/wiki_dpr/'. Use `repo_type` argument if needed.
+2026-01-20 12:06:23,383 - INFO - ⚠️EXCEPTION IN __init__: Repo id must be in the form 'repo_name' or 'namespace/repo_name': 'https://storage.googleapis.com/huggingface-nlp/datasets/wiki_dpr/'. Use `repo_type` argument if needed.
+2026-01-20 12:33:42,230 - INFO - ⚠️EXCEPTION IN __init__: Repo id must be in the form 'repo_name' or 'namespace/repo_name': 'https://storage.googleapis.com/huggingface-nlp/datasets/wiki_dpr/'. Use `repo_type` argument if needed.
+2026-01-20 13:56:21,921 - INFO - ⚠️EXCEPTION IN __init__: Repo id must be in the form 'repo_name' or 'namespace/repo_name': 'https://storage.googleapis.com/huggingface-nlp/datasets/wiki_dpr/'. Use `repo_type` argument if needed.
+2026-01-20 14:27:34,254 - INFO - ⚠️EXCEPTION IN __init__: Could not import sentence_transformers python package. Please install it with `pip install sentence-transformers`.
+2026-01-20 14:27:34,315 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Innate_immune_system
+2026-01-20 14:27:35,130 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Immune_response
+2026-01-20 14:27:35,589 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Immunology
+2026-01-20 14:27:36,290 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Adaptive_immune_system
+2026-01-20 14:27:37,028 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 14:27:38,202 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 14:28:51,606 - INFO - ⚠️EXCEPTION IN __init__: Could not import sentence_transformers python package. Please install it with `pip install sentence-transformers`.
+2026-01-20 14:28:51,644 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Innate_immune_system
+2026-01-20 14:28:51,678 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Immune_response
+2026-01-20 14:28:52,150 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Immunology
+2026-01-20 14:28:52,918 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Adaptive_immune_system
+2026-01-20 14:28:53,667 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 14:28:54,880 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 14:30:24,350 - INFO - Use pytorch device_name: cuda:0
+2026-01-20 14:30:24,350 - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2026-01-20 14:30:45,333 - INFO - ⚠️EXCEPTION IN __init__: 'ChatOllama' object has no attribute 'get_models'
+2026-01-20 14:30:45,377 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Innate_immune_system
+2026-01-20 14:30:46,188 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Immune_response
+2026-01-20 14:30:46,688 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Immunology
+2026-01-20 14:30:47,394 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Adaptive_immune_system
+2026-01-20 14:30:48,146 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 14:30:49,351 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 14:44:51,594 - INFO - Use pytorch device_name: cuda:0
+2026-01-20 14:44:51,594 - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2026-01-20 14:44:55,497 - INFO - ⚠️EXCEPTION IN __init__: 'ChatOllama' object has no attribute 'get_models'
+2026-01-20 14:45:56,202 - INFO - Use pytorch device_name: cuda:0
+2026-01-20 14:45:56,202 - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2026-01-20 14:46:00,040 - INFO - ⚠️EXCEPTION IN __init__: 'ChatOllama' object has no attribute 'get_models'
+2026-01-20 14:46:00,079 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Innate_immune_system
+2026-01-20 14:46:00,810 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Immune_response
+2026-01-20 14:46:01,288 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Immunology
+2026-01-20 14:46:01,978 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Adaptive_immune_system
+2026-01-20 14:46:02,702 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 14:46:03,884 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 16:21:59,438 - INFO - Use pytorch device_name: cuda:0
+2026-01-20 16:21:59,438 - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2026-01-20 16:22:03,649 - INFO - ⚠️EXCEPTION IN __init__: 'ChatOllama' object has no attribute 'get_models'
+2026-01-20 16:22:03,723 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Innate_immune_system
+2026-01-20 16:22:04,433 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Immune_response
+2026-01-20 16:22:04,811 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Immunology
+2026-01-20 16:22:05,452 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Adaptive_immune_system
+2026-01-20 16:22:06,115 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:22:07,222 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 16:22:08,410 - INFO - PROCESSING ROW INDEX: 0
+2026-01-20 16:22:08,414 - INFO - PROCESSING ROW INDEX: 1
+2026-01-20 16:22:08,414 - INFO - PROCESSING ROW INDEX: 2
+2026-01-20 16:22:08,414 - INFO - PROCESSING ROW INDEX: 3
+2026-01-20 16:22:08,414 - INFO - PROCESSING ROW INDEX: 4
+2026-01-20 16:22:08,415 - INFO - PROCESSING ROW INDEX: 5
+2026-01-20 16:24:59,416 - INFO - Use pytorch device_name: cuda:0
+2026-01-20 16:24:59,417 - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2026-01-20 16:25:03,505 - INFO - ⚠️EXCEPTION IN __init__: 'ChatOllama' object has no attribute 'get_models'
+2026-01-20 16:25:03,559 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Innate_immune_system
+2026-01-20 16:25:04,490 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Immune_response
+2026-01-20 16:25:04,897 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Immunology
+2026-01-20 16:25:05,546 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Adaptive_immune_system
+2026-01-20 16:25:06,230 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:25:07,379 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 16:26:04,390 - INFO - Use pytorch device_name: cuda:0
+2026-01-20 16:26:04,390 - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2026-01-20 16:26:08,127 - INFO - ⚠️EXCEPTION IN __init__: 'ChatOllama' object has no attribute 'get_models'
+2026-01-20 16:26:08,165 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Innate_immune_system
+2026-01-20 16:26:08,876 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Immune_response
+2026-01-20 16:26:09,302 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Immunology
+2026-01-20 16:26:10,017 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Adaptive_immune_system
+2026-01-20 16:26:10,716 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:26:11,871 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 16:26:13,057 - INFO - PROCESSING ROW INDEX: 0
+2026-01-20 16:26:13,071 - INFO - PROCESSING ROW INDEX: 1
+2026-01-20 16:26:13,077 - INFO - PROCESSING ROW INDEX: 2
+2026-01-20 16:26:13,085 - INFO - PROCESSING ROW INDEX: 3
+2026-01-20 16:26:13,106 - INFO - PROCESSING ROW INDEX: 4
+2026-01-20 16:26:13,141 - INFO - PROCESSING ROW INDEX: 5
+2026-01-20 16:30:56,919 - INFO - Use pytorch device_name: cuda:0
+2026-01-20 16:30:56,920 - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2026-01-20 16:31:01,101 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Innate_immune_system
+2026-01-20 16:31:01,867 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Immune_response
+2026-01-20 16:31:02,298 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Immunology
+2026-01-20 16:31:02,960 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Adaptive_immune_system
+2026-01-20 16:31:03,665 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:31:04,876 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 16:31:06,052 - INFO - PROCESSING ROW INDEX: 0
+2026-01-20 16:31:06,066 - INFO - PROCESSING ROW INDEX: 1
+2026-01-20 16:31:06,071 - INFO - PROCESSING ROW INDEX: 2
+2026-01-20 16:31:06,080 - INFO - PROCESSING ROW INDEX: 3
+2026-01-20 16:31:06,096 - INFO - PROCESSING ROW INDEX: 4
+2026-01-20 16:31:06,122 - INFO - PROCESSING ROW INDEX: 5
+2026-01-20 16:32:17,243 - INFO - Use pytorch device_name: cuda:0
+2026-01-20 16:32:17,244 - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2026-01-20 16:32:20,334 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Innate_immune_system
+2026-01-20 16:32:21,147 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Immune_response
+2026-01-20 16:32:21,559 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Immunology
+2026-01-20 16:32:22,218 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Adaptive_immune_system
+2026-01-20 16:32:22,924 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:32:24,086 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 16:32:25,329 - INFO - PROCESSING ROW INDEX: 0
+2026-01-20 16:32:25,340 - INFO - PROCESSING ROW INDEX: 1
+2026-01-20 16:32:25,345 - INFO - PROCESSING ROW INDEX: 2
+2026-01-20 16:32:25,351 - INFO - PROCESSING ROW INDEX: 3
+2026-01-20 16:32:25,371 - INFO - PROCESSING ROW INDEX: 4
+2026-01-20 16:32:25,403 - INFO - PROCESSING ROW INDEX: 5
+2026-01-20 16:33:05,502 - INFO - Use pytorch device_name: cuda:0
+2026-01-20 16:33:05,502 - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2026-01-20 16:33:09,541 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Innate_immune_system
+2026-01-20 16:33:10,286 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Immune_response
+2026-01-20 16:33:10,752 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Immunology
+2026-01-20 16:33:11,455 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Adaptive_immune_system
+2026-01-20 16:33:12,201 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:33:13,398 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 16:33:14,801 - INFO - PROCESSING ROW INDEX: 0
+2026-01-20 16:33:14,824 - INFO - PROCESSING ROW INDEX: 1
+2026-01-20 16:33:14,833 - INFO - PROCESSING ROW INDEX: 2
+2026-01-20 16:33:14,845 - INFO - PROCESSING ROW INDEX: 3
+2026-01-20 16:33:14,904 - INFO - PROCESSING ROW INDEX: 4
+2026-01-20 16:33:15,024 - INFO - PROCESSING ROW INDEX: 5
+2026-01-20 16:34:19,385 - INFO - Use pytorch device_name: cuda:0
+2026-01-20 16:34:19,385 - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2026-01-20 16:34:23,293 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Innate_immune_system
+2026-01-20 16:34:24,084 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Immune_response
+2026-01-20 16:34:24,502 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Immunology
+2026-01-20 16:34:24,534 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Adaptive_immune_system
+2026-01-20 16:34:25,369 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:34:26,611 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 16:34:28,140 - INFO - PROCESSING ROW INDEX: 0
+2026-01-20 16:34:28,152 - INFO - PROCESSING ROW INDEX: 1
+2026-01-20 16:34:28,157 - INFO - PROCESSING ROW INDEX: 2
+2026-01-20 16:34:28,165 - INFO - PROCESSING ROW INDEX: 3
+2026-01-20 16:34:28,184 - INFO - PROCESSING ROW INDEX: 4
+2026-01-20 16:34:28,217 - INFO - PROCESSING ROW INDEX: 5
+2026-01-20 16:34:28,245 - INFO - PROCESSING CHUNK INDEX: 0 for URL: https://en.wikipedia.org/wiki/Innate_immune_system
+2026-01-20 16:34:28,719 - ERROR - Error generating embedding for row 0: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:28,719 - INFO - PROCESSING CHUNK INDEX: 1 for URL: https://en.wikipedia.org/wiki/Innate_immune_system
+2026-01-20 16:34:28,740 - ERROR - Error generating embedding for row 1: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:28,740 - INFO - PROCESSING CHUNK INDEX: 2 for URL: https://en.wikipedia.org/wiki/Innate_immune_system
+2026-01-20 16:34:28,762 - ERROR - Error generating embedding for row 2: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:28,762 - INFO - PROCESSING CHUNK INDEX: 3 for URL: https://en.wikipedia.org/wiki/Innate_immune_system
+2026-01-20 16:34:28,784 - ERROR - Error generating embedding for row 3: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:28,785 - INFO - PROCESSING CHUNK INDEX: 4 for URL: https://en.wikipedia.org/wiki/Innate_immune_system
+2026-01-20 16:34:28,826 - ERROR - Error generating embedding for row 4: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:28,827 - INFO - PROCESSING CHUNK INDEX: 5 for URL: https://en.wikipedia.org/wiki/Innate_immune_system
+2026-01-20 16:34:28,856 - ERROR - Error generating embedding for row 5: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:28,857 - INFO - PROCESSING CHUNK INDEX: 6 for URL: https://en.wikipedia.org/wiki/Innate_immune_system
+2026-01-20 16:34:28,886 - ERROR - Error generating embedding for row 6: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:28,887 - INFO - PROCESSING CHUNK INDEX: 0 for URL: https://en.wikipedia.org/wiki/Immune_response
+2026-01-20 16:34:28,913 - ERROR - Error generating embedding for row 7: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:28,913 - INFO - PROCESSING CHUNK INDEX: 1 for URL: https://en.wikipedia.org/wiki/Immune_response
+2026-01-20 16:34:28,940 - ERROR - Error generating embedding for row 8: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:28,941 - INFO - PROCESSING CHUNK INDEX: 2 for URL: https://en.wikipedia.org/wiki/Immune_response
+2026-01-20 16:34:28,968 - ERROR - Error generating embedding for row 9: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:28,968 - INFO - PROCESSING CHUNK INDEX: 0 for URL: https://en.wikipedia.org/wiki/Immunology
+2026-01-20 16:34:28,997 - ERROR - Error generating embedding for row 10: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:28,997 - INFO - PROCESSING CHUNK INDEX: 1 for URL: https://en.wikipedia.org/wiki/Immunology
+2026-01-20 16:34:29,026 - ERROR - Error generating embedding for row 11: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:29,027 - INFO - PROCESSING CHUNK INDEX: 2 for URL: https://en.wikipedia.org/wiki/Immunology
+2026-01-20 16:34:29,047 - ERROR - Error generating embedding for row 12: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:29,047 - INFO - PROCESSING CHUNK INDEX: 3 for URL: https://en.wikipedia.org/wiki/Immunology
+2026-01-20 16:34:29,069 - ERROR - Error generating embedding for row 13: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:29,070 - INFO - PROCESSING CHUNK INDEX: 0 for URL: https://en.wikipedia.org/wiki/Adaptive_immune_system
+2026-01-20 16:34:29,092 - ERROR - Error generating embedding for row 14: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:29,093 - INFO - PROCESSING CHUNK INDEX: 1 for URL: https://en.wikipedia.org/wiki/Adaptive_immune_system
+2026-01-20 16:34:29,125 - ERROR - Error generating embedding for row 15: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:29,126 - INFO - PROCESSING CHUNK INDEX: 2 for URL: https://en.wikipedia.org/wiki/Adaptive_immune_system
+2026-01-20 16:34:29,168 - ERROR - Error generating embedding for row 16: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:29,168 - INFO - PROCESSING CHUNK INDEX: 3 for URL: https://en.wikipedia.org/wiki/Adaptive_immune_system
+2026-01-20 16:34:29,206 - ERROR - Error generating embedding for row 17: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:29,206 - INFO - PROCESSING CHUNK INDEX: 4 for URL: https://en.wikipedia.org/wiki/Adaptive_immune_system
+2026-01-20 16:34:29,241 - ERROR - Error generating embedding for row 18: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:29,241 - INFO - PROCESSING CHUNK INDEX: 5 for URL: https://en.wikipedia.org/wiki/Adaptive_immune_system
+2026-01-20 16:34:29,275 - ERROR - Error generating embedding for row 19: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:29,276 - INFO - PROCESSING CHUNK INDEX: 6 for URL: https://en.wikipedia.org/wiki/Adaptive_immune_system
+2026-01-20 16:34:29,311 - ERROR - Error generating embedding for row 20: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:29,312 - INFO - PROCESSING CHUNK INDEX: 7 for URL: https://en.wikipedia.org/wiki/Adaptive_immune_system
+2026-01-20 16:34:29,343 - ERROR - Error generating embedding for row 21: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:29,344 - INFO - PROCESSING CHUNK INDEX: 8 for URL: https://en.wikipedia.org/wiki/Adaptive_immune_system
+2026-01-20 16:34:29,374 - ERROR - Error generating embedding for row 22: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:29,375 - INFO - PROCESSING CHUNK INDEX: 9 for URL: https://en.wikipedia.org/wiki/Adaptive_immune_system
+2026-01-20 16:34:29,405 - ERROR - Error generating embedding for row 23: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:29,406 - INFO - PROCESSING CHUNK INDEX: 0 for URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:34:29,438 - ERROR - Error generating embedding for row 24: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:29,439 - INFO - PROCESSING CHUNK INDEX: 1 for URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:34:29,463 - ERROR - Error generating embedding for row 25: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:29,464 - INFO - PROCESSING CHUNK INDEX: 2 for URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:34:29,491 - ERROR - Error generating embedding for row 26: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:29,491 - INFO - PROCESSING CHUNK INDEX: 3 for URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:34:29,521 - ERROR - Error generating embedding for row 27: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:29,522 - INFO - PROCESSING CHUNK INDEX: 4 for URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:34:29,544 - ERROR - Error generating embedding for row 28: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:29,545 - INFO - PROCESSING CHUNK INDEX: 5 for URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:34:29,567 - ERROR - Error generating embedding for row 29: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:29,568 - INFO - PROCESSING CHUNK INDEX: 6 for URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:34:29,589 - ERROR - Error generating embedding for row 30: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:29,589 - INFO - PROCESSING CHUNK INDEX: 7 for URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:34:29,609 - ERROR - Error generating embedding for row 31: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:29,610 - INFO - PROCESSING CHUNK INDEX: 8 for URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:34:29,633 - ERROR - Error generating embedding for row 32: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:29,634 - INFO - PROCESSING CHUNK INDEX: 9 for URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:34:29,657 - ERROR - Error generating embedding for row 33: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:29,657 - INFO - PROCESSING CHUNK INDEX: 10 for URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:34:29,681 - ERROR - Error generating embedding for row 34: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:29,681 - INFO - PROCESSING CHUNK INDEX: 11 for URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:34:29,706 - ERROR - Error generating embedding for row 35: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:29,706 - INFO - PROCESSING CHUNK INDEX: 12 for URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:34:29,728 - ERROR - Error generating embedding for row 36: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:29,729 - INFO - PROCESSING CHUNK INDEX: 13 for URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:34:29,762 - ERROR - Error generating embedding for row 37: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:29,762 - INFO - PROCESSING CHUNK INDEX: 0 for URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 16:34:29,787 - ERROR - Error generating embedding for row 38: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:29,787 - INFO - PROCESSING CHUNK INDEX: 1 for URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 16:34:29,807 - ERROR - Error generating embedding for row 39: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:29,808 - INFO - PROCESSING CHUNK INDEX: 2 for URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 16:34:29,831 - ERROR - Error generating embedding for row 40: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:29,831 - INFO - PROCESSING CHUNK INDEX: 3 for URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 16:34:29,855 - ERROR - Error generating embedding for row 41: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:29,855 - INFO - PROCESSING CHUNK INDEX: 4 for URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 16:34:29,877 - ERROR - Error generating embedding for row 42: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:29,877 - INFO - PROCESSING CHUNK INDEX: 5 for URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 16:34:29,899 - ERROR - Error generating embedding for row 43: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:29,900 - INFO - PROCESSING CHUNK INDEX: 6 for URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 16:34:29,924 - ERROR - Error generating embedding for row 44: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:29,925 - INFO - PROCESSING CHUNK INDEX: 7 for URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 16:34:29,954 - ERROR - Error generating embedding for row 45: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:29,954 - INFO - PROCESSING CHUNK INDEX: 8 for URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 16:34:29,976 - ERROR - Error generating embedding for row 46: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:29,977 - INFO - PROCESSING CHUNK INDEX: 9 for URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 16:34:30,003 - ERROR - Error generating embedding for row 47: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:30,004 - INFO - PROCESSING CHUNK INDEX: 10 for URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 16:34:30,025 - ERROR - Error generating embedding for row 48: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:30,026 - INFO - PROCESSING CHUNK INDEX: 11 for URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 16:34:30,050 - ERROR - Error generating embedding for row 49: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:34:30,051 - INFO - PROCESSING CHUNK INDEX: 12 for URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 16:34:30,072 - ERROR - Error generating embedding for row 50: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:22,255 - INFO - Use pytorch device_name: cuda:0
+2026-01-20 16:35:22,255 - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2026-01-20 16:35:26,028 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Innate_immune_system
+2026-01-20 16:35:26,748 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Immune_response
+2026-01-20 16:35:27,158 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Immunology
+2026-01-20 16:35:27,849 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Adaptive_immune_system
+2026-01-20 16:35:27,838 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:35:28,993 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 16:35:30,256 - INFO - PROCESSING ROW INDEX: 0
+2026-01-20 16:35:30,269 - INFO - PROCESSING ROW INDEX: 1
+2026-01-20 16:35:30,274 - INFO - PROCESSING ROW INDEX: 2
+2026-01-20 16:35:30,281 - INFO - PROCESSING ROW INDEX: 3
+2026-01-20 16:35:30,302 - INFO - PROCESSING ROW INDEX: 4
+2026-01-20 16:35:30,336 - INFO - PROCESSING ROW INDEX: 5
+2026-01-20 16:35:30,358 - INFO - PROCESSING CHUNK INDEX: 0 for URL: https://en.wikipedia.org/wiki/Innate_immune_system
+2026-01-20 16:35:30,622 - ERROR - Error generating embedding for row 0: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:30,624 - INFO - PROCESSING CHUNK INDEX: 1 for URL: https://en.wikipedia.org/wiki/Innate_immune_system
+2026-01-20 16:35:30,640 - ERROR - Error generating embedding for row 1: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:30,641 - INFO - PROCESSING CHUNK INDEX: 2 for URL: https://en.wikipedia.org/wiki/Innate_immune_system
+2026-01-20 16:35:30,658 - ERROR - Error generating embedding for row 2: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:30,659 - INFO - PROCESSING CHUNK INDEX: 3 for URL: https://en.wikipedia.org/wiki/Innate_immune_system
+2026-01-20 16:35:30,689 - ERROR - Error generating embedding for row 3: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:30,690 - INFO - PROCESSING CHUNK INDEX: 4 for URL: https://en.wikipedia.org/wiki/Innate_immune_system
+2026-01-20 16:35:30,710 - ERROR - Error generating embedding for row 4: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:30,710 - INFO - PROCESSING CHUNK INDEX: 5 for URL: https://en.wikipedia.org/wiki/Innate_immune_system
+2026-01-20 16:35:30,729 - ERROR - Error generating embedding for row 5: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:30,730 - INFO - PROCESSING CHUNK INDEX: 6 for URL: https://en.wikipedia.org/wiki/Innate_immune_system
+2026-01-20 16:35:30,758 - ERROR - Error generating embedding for row 6: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:30,759 - INFO - PROCESSING CHUNK INDEX: 0 for URL: https://en.wikipedia.org/wiki/Immune_response
+2026-01-20 16:35:30,786 - ERROR - Error generating embedding for row 7: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:30,787 - INFO - PROCESSING CHUNK INDEX: 1 for URL: https://en.wikipedia.org/wiki/Immune_response
+2026-01-20 16:35:30,813 - ERROR - Error generating embedding for row 8: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:30,814 - INFO - PROCESSING CHUNK INDEX: 2 for URL: https://en.wikipedia.org/wiki/Immune_response
+2026-01-20 16:35:30,832 - ERROR - Error generating embedding for row 9: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:30,833 - INFO - PROCESSING CHUNK INDEX: 0 for URL: https://en.wikipedia.org/wiki/Immunology
+2026-01-20 16:35:30,856 - ERROR - Error generating embedding for row 10: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:30,857 - INFO - PROCESSING CHUNK INDEX: 1 for URL: https://en.wikipedia.org/wiki/Immunology
+2026-01-20 16:35:30,889 - ERROR - Error generating embedding for row 11: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:30,890 - INFO - PROCESSING CHUNK INDEX: 2 for URL: https://en.wikipedia.org/wiki/Immunology
+2026-01-20 16:35:30,918 - ERROR - Error generating embedding for row 12: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:30,919 - INFO - PROCESSING CHUNK INDEX: 3 for URL: https://en.wikipedia.org/wiki/Immunology
+2026-01-20 16:35:30,942 - ERROR - Error generating embedding for row 13: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:30,943 - INFO - PROCESSING CHUNK INDEX: 0 for URL: https://en.wikipedia.org/wiki/Adaptive_immune_system
+2026-01-20 16:35:30,970 - ERROR - Error generating embedding for row 14: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:30,971 - INFO - PROCESSING CHUNK INDEX: 1 for URL: https://en.wikipedia.org/wiki/Adaptive_immune_system
+2026-01-20 16:35:30,998 - ERROR - Error generating embedding for row 15: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:30,999 - INFO - PROCESSING CHUNK INDEX: 2 for URL: https://en.wikipedia.org/wiki/Adaptive_immune_system
+2026-01-20 16:35:31,021 - ERROR - Error generating embedding for row 16: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:31,022 - INFO - PROCESSING CHUNK INDEX: 3 for URL: https://en.wikipedia.org/wiki/Adaptive_immune_system
+2026-01-20 16:35:31,041 - ERROR - Error generating embedding for row 17: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:31,042 - INFO - PROCESSING CHUNK INDEX: 4 for URL: https://en.wikipedia.org/wiki/Adaptive_immune_system
+2026-01-20 16:35:31,060 - ERROR - Error generating embedding for row 18: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:31,061 - INFO - PROCESSING CHUNK INDEX: 5 for URL: https://en.wikipedia.org/wiki/Adaptive_immune_system
+2026-01-20 16:35:31,079 - ERROR - Error generating embedding for row 19: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:31,080 - INFO - PROCESSING CHUNK INDEX: 6 for URL: https://en.wikipedia.org/wiki/Adaptive_immune_system
+2026-01-20 16:35:31,103 - ERROR - Error generating embedding for row 20: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:31,104 - INFO - PROCESSING CHUNK INDEX: 7 for URL: https://en.wikipedia.org/wiki/Adaptive_immune_system
+2026-01-20 16:35:31,124 - ERROR - Error generating embedding for row 21: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:31,125 - INFO - PROCESSING CHUNK INDEX: 8 for URL: https://en.wikipedia.org/wiki/Adaptive_immune_system
+2026-01-20 16:35:31,149 - ERROR - Error generating embedding for row 22: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:31,150 - INFO - PROCESSING CHUNK INDEX: 9 for URL: https://en.wikipedia.org/wiki/Adaptive_immune_system
+2026-01-20 16:35:31,171 - ERROR - Error generating embedding for row 23: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:31,172 - INFO - PROCESSING CHUNK INDEX: 0 for URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:35:31,189 - ERROR - Error generating embedding for row 24: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:31,190 - INFO - PROCESSING CHUNK INDEX: 1 for URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:35:31,207 - ERROR - Error generating embedding for row 25: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:31,208 - INFO - PROCESSING CHUNK INDEX: 2 for URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:35:31,232 - ERROR - Error generating embedding for row 26: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:31,232 - INFO - PROCESSING CHUNK INDEX: 3 for URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:35:31,256 - ERROR - Error generating embedding for row 27: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:31,257 - INFO - PROCESSING CHUNK INDEX: 4 for URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:35:31,281 - ERROR - Error generating embedding for row 28: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:31,282 - INFO - PROCESSING CHUNK INDEX: 5 for URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:35:31,307 - ERROR - Error generating embedding for row 29: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:31,308 - INFO - PROCESSING CHUNK INDEX: 6 for URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:35:31,328 - ERROR - Error generating embedding for row 30: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:31,329 - INFO - PROCESSING CHUNK INDEX: 7 for URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:35:31,358 - ERROR - Error generating embedding for row 31: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:31,358 - INFO - PROCESSING CHUNK INDEX: 8 for URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:35:31,377 - ERROR - Error generating embedding for row 32: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:31,377 - INFO - PROCESSING CHUNK INDEX: 9 for URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:35:31,396 - ERROR - Error generating embedding for row 33: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:31,397 - INFO - PROCESSING CHUNK INDEX: 10 for URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:35:31,421 - ERROR - Error generating embedding for row 34: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:31,422 - INFO - PROCESSING CHUNK INDEX: 11 for URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:35:31,448 - ERROR - Error generating embedding for row 35: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:31,448 - INFO - PROCESSING CHUNK INDEX: 12 for URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:35:31,472 - ERROR - Error generating embedding for row 36: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:31,473 - INFO - PROCESSING CHUNK INDEX: 13 for URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:35:31,500 - ERROR - Error generating embedding for row 37: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:31,500 - INFO - PROCESSING CHUNK INDEX: 0 for URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 16:35:31,530 - ERROR - Error generating embedding for row 38: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:31,531 - INFO - PROCESSING CHUNK INDEX: 1 for URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 16:35:31,564 - ERROR - Error generating embedding for row 39: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:31,564 - INFO - PROCESSING CHUNK INDEX: 2 for URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 16:35:31,582 - ERROR - Error generating embedding for row 40: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:31,583 - INFO - PROCESSING CHUNK INDEX: 3 for URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 16:35:31,600 - ERROR - Error generating embedding for row 41: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:31,601 - INFO - PROCESSING CHUNK INDEX: 4 for URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 16:35:31,617 - ERROR - Error generating embedding for row 42: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:31,618 - INFO - PROCESSING CHUNK INDEX: 5 for URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 16:35:31,635 - ERROR - Error generating embedding for row 43: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:31,636 - INFO - PROCESSING CHUNK INDEX: 6 for URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 16:35:31,653 - ERROR - Error generating embedding for row 44: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:31,654 - INFO - PROCESSING CHUNK INDEX: 7 for URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 16:35:31,671 - ERROR - Error generating embedding for row 45: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:31,671 - INFO - PROCESSING CHUNK INDEX: 8 for URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 16:35:31,689 - ERROR - Error generating embedding for row 46: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:31,690 - INFO - PROCESSING CHUNK INDEX: 9 for URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 16:35:31,716 - ERROR - Error generating embedding for row 47: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:31,717 - INFO - PROCESSING CHUNK INDEX: 10 for URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 16:35:31,735 - ERROR - Error generating embedding for row 48: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:31,736 - INFO - PROCESSING CHUNK INDEX: 11 for URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 16:35:31,753 - ERROR - Error generating embedding for row 49: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:35:31,754 - INFO - PROCESSING CHUNK INDEX: 12 for URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 16:35:31,769 - ERROR - Error generating embedding for row 50: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
+2026-01-20 16:36:19,341 - INFO - Use pytorch device_name: cuda:0
+2026-01-20 16:36:19,341 - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2026-01-20 16:36:25,346 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Innate_immune_system
+2026-01-20 16:36:26,158 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Immune_response
+2026-01-20 16:36:26,596 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Immunology
+2026-01-20 16:36:27,279 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Adaptive_immune_system
+2026-01-20 16:36:28,023 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:36:29,166 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 16:36:30,458 - INFO - PROCESSING ROW INDEX: 0
+2026-01-20 16:36:30,470 - INFO - PROCESSING ROW INDEX: 1
+2026-01-20 16:36:30,478 - INFO - PROCESSING ROW INDEX: 2
+2026-01-20 16:36:30,485 - INFO - PROCESSING ROW INDEX: 3
+2026-01-20 16:36:30,503 - INFO - PROCESSING ROW INDEX: 4
+2026-01-20 16:36:30,538 - INFO - PROCESSING ROW INDEX: 5
+2026-01-20 16:37:14,039 - INFO - Use pytorch device_name: cuda:0
+2026-01-20 16:37:14,039 - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2026-01-20 16:37:18,122 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Innate_immune_system
+2026-01-20 16:37:18,862 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Immune_response
+2026-01-20 16:37:19,288 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Immunology
+2026-01-20 16:37:20,043 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Adaptive_immune_system
+2026-01-20 16:37:20,798 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:37:22,046 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 16:37:23,295 - INFO - PROCESSING ROW INDEX: 0
+2026-01-20 16:37:23,307 - INFO - PROCESSING ROW INDEX: 1
+2026-01-20 16:37:23,312 - INFO - PROCESSING ROW INDEX: 2
+2026-01-20 16:37:23,319 - INFO - PROCESSING ROW INDEX: 3
+2026-01-20 16:37:23,340 - INFO - PROCESSING ROW INDEX: 4
+2026-01-20 16:37:23,368 - INFO - PROCESSING ROW INDEX: 5
+2026-01-20 16:38:28,225 - INFO - Use pytorch device_name: cuda:0
+2026-01-20 16:38:28,226 - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2026-01-20 16:38:32,148 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Innate_immune_system
+2026-01-20 16:38:32,895 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Immune_response
+2026-01-20 16:38:33,308 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Immunology
+2026-01-20 16:38:34,029 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Adaptive_immune_system
+2026-01-20 16:38:34,854 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:38:36,282 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-20 16:38:37,842 - INFO - PROCESSING ROW INDEX: 0
+2026-01-20 16:38:37,856 - INFO - PROCESSING ROW INDEX: 1
+2026-01-20 16:38:37,861 - INFO - PROCESSING ROW INDEX: 2
+2026-01-20 16:38:37,870 - INFO - PROCESSING ROW INDEX: 3
+2026-01-20 16:38:37,890 - INFO - PROCESSING ROW INDEX: 4
+2026-01-20 16:38:37,921 - INFO - PROCESSING ROW INDEX: 5
