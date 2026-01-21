@@ -236,6 +236,16 @@ Install lxml[html_clean] or lxml_html_clean directly.
 2026-01-20 16:34:29,787 - ERROR - Error generating embedding for row 38: Must have equal len keys and value when setting with an iterable
 2026-01-20 16:34:29,787 - INFO - PROCESSING CHUNK INDEX: 1 for URL: https://en.wikipedia.org/wiki/Vaccine
 2026-01-20 16:34:29,807 - ERROR - Error generating embedding for row 39: Must have equal len keys and value when setting with an iterable
+Traceback (most recent call last):
+  File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
+    chunks_df.loc[idx, "embedding"] = embedding
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 912, in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1943, in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+  File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
+    raise ValueError(
+ValueError: Must have equal len keys and value when setting with an iterable
 2026-01-20 16:34:29,808 - INFO - PROCESSING CHUNK INDEX: 2 for URL: https://en.wikipedia.org/wiki/Vaccine
 2026-01-20 16:34:29,831 - ERROR - Error generating embedding for row 40: Must have equal len keys and value when setting with an iterable
 2026-01-20 16:34:29,831 - INFO - PROCESSING CHUNK INDEX: 3 for URL: https://en.wikipedia.org/wiki/Vaccine
@@ -608,7 +618,7 @@ Traceback (most recent call last):
   File "/home/kiranftw/HyperRAG-SAP/venv/lib/python3.10/site-packages/pandas/core/indexing.py", line 1999, in _setitem_with_indexer_split_path
     raise ValueError(
 ValueError: Must have equal len keys and value when setting with an iterable
-2026-01-20 16:35:31,257 - INFO - PROCESSING CHUNK INDEX: 4 for URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-20 16:35:31,256 - INFO - PROCESSING CHUNK INDEX: 4 for URL: https://en.wikipedia.org/wiki/Antibody
 2026-01-20 16:35:31,281 - ERROR - Error generating embedding for row 28: Must have equal len keys and value when setting with an iterable
 Traceback (most recent call last):
   File "/home/kiranftw/HyperRAG-SAP/RAGFusion.py", line 89, in generate_embeddings
@@ -926,3 +936,71 @@ ValueError: Must have equal len keys and value when setting with an iterable
 2026-01-20 16:38:37,870 - INFO - PROCESSING ROW INDEX: 3
 2026-01-20 16:38:37,890 - INFO - PROCESSING ROW INDEX: 4
 2026-01-20 16:38:37,921 - INFO - PROCESSING ROW INDEX: 5
+2026-01-21 13:44:36,217 - INFO - Use pytorch device_name: cuda:0
+2026-01-21 13:44:36,217 - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2026-01-21 13:44:40,916 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Innate_immune_system
+2026-01-21 13:44:41,666 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Immune_response
+2026-01-21 13:44:42,109 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Immunology
+2026-01-21 13:44:42,825 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Adaptive_immune_system
+2026-01-21 13:44:43,557 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-21 13:44:44,691 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-21 13:44:45,931 - INFO - PROCESSING ROW INDEX: 0
+2026-01-21 13:44:45,941 - INFO - PROCESSING ROW INDEX: 1
+2026-01-21 13:44:45,946 - INFO - PROCESSING ROW INDEX: 2
+2026-01-21 13:44:45,952 - INFO - PROCESSING ROW INDEX: 3
+2026-01-21 13:44:45,972 - INFO - PROCESSING ROW INDEX: 4
+2026-01-21 13:44:46,003 - INFO - PROCESSING ROW INDEX: 5
+2026-01-21 13:45:25,343 - INFO - Use pytorch device_name: cuda:0
+2026-01-21 13:45:25,343 - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2026-01-21 13:45:29,322 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Innate_immune_system
+2026-01-21 13:45:30,014 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Immune_response
+2026-01-21 13:45:30,430 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Immunology
+2026-01-21 13:45:31,101 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Adaptive_immune_system
+2026-01-21 13:45:31,800 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Antibody
+2026-01-21 13:45:32,967 - INFO - SCRAPPING URL: https://en.wikipedia.org/wiki/Vaccine
+2026-01-21 13:45:34,172 - INFO - PROCESSING ROW INDEX: 0
+2026-01-21 13:45:34,185 - INFO - PROCESSING ROW INDEX: 1
+2026-01-21 13:45:34,190 - INFO - PROCESSING ROW INDEX: 2
+2026-01-21 13:45:34,200 - INFO - PROCESSING ROW INDEX: 3
+2026-01-21 13:45:34,220 - INFO - PROCESSING ROW INDEX: 4
+2026-01-21 13:45:34,259 - INFO - PROCESSING ROW INDEX: 5
+2026-01-21 13:47:38,875 - INFO - Use pytorch device_name: cuda:0
+2026-01-21 13:47:38,876 - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2026-01-21 13:48:21,145 - INFO - Use pytorch device_name: cuda:0
+2026-01-21 13:48:21,145 - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2026-01-21 13:48:49,148 - INFO - Use pytorch device_name: cuda:0
+2026-01-21 13:48:49,148 - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2026-01-21 13:49:36,389 - INFO - Use pytorch device_name: cuda:0
+2026-01-21 13:49:36,390 - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2026-01-21 13:49:40,431 - INFO - FAISS INDEX GENERATED AND SAVED.
+2026-01-21 13:51:32,526 - INFO - Use pytorch device_name: cuda:0
+2026-01-21 13:51:32,526 - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2026-01-21 13:52:21,944 - INFO - Use pytorch device_name: cuda:0
+2026-01-21 13:52:21,944 - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2026-01-21 13:52:25,952 - WARNING - `embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+2026-01-21 13:53:15,799 - INFO - Use pytorch device_name: cuda:0
+2026-01-21 13:53:15,799 - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2026-01-21 13:53:18,248 - WARNING - `embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+2026-01-21 13:55:17,418 - INFO - Use pytorch device_name: cuda:0
+2026-01-21 13:55:17,418 - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2026-01-21 13:55:42,748 - INFO - Use pytorch device_name: cuda:0
+2026-01-21 13:55:42,749 - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2026-01-21 13:55:46,779 - WARNING - `embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+2026-01-21 13:56:06,388 - INFO - Use pytorch device_name: cuda:0
+2026-01-21 13:56:06,389 - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2026-01-21 13:56:10,639 - WARNING - `embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+2026-01-21 13:56:42,300 - INFO - Use pytorch device_name: cuda:0
+2026-01-21 13:56:42,300 - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2026-01-21 13:56:46,247 - WARNING - `embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+2026-01-21 13:57:33,602 - INFO - Use pytorch device_name: cuda:0
+2026-01-21 13:57:33,602 - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2026-01-21 14:01:29,949 - INFO - Use pytorch device_name: cuda:0
+2026-01-21 14:01:29,950 - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2026-01-21 14:02:08,630 - INFO - Use pytorch device_name: cuda:0
+2026-01-21 14:02:08,631 - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2026-01-21 14:02:12,689 - INFO - FAISS INDEX GENERATED AND SAVED.
+2026-01-21 14:06:08,119 - INFO - Use pytorch device_name: cuda:0
+2026-01-21 14:06:08,119 - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2026-01-21 14:06:12,073 - INFO - FAISS INDEX GENERATED AND SAVED.
+2026-01-21 14:06:12,403 - INFO - RETRIEVED 4 DOCUMENTS FROM INDEX FOR QUERY: What is immune system?
+2026-01-21 14:06:12,403 - INFO - pip install deepagents
