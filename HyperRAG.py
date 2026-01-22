@@ -33,40 +33,56 @@ def ExceptionHandelling(func):
     return wrapper
 
 class HyperRetrivalAugmentedGeneration:
-    def __init__(self) -> None:
+    def __init__(self, model_name: str = "gpt-oss:120b-cloud") -> None:
         self.DIR = os.path.dirname(os.path.abspath(__file__))
-        self.DATASET = os.path.join(self.DIR, "dataset", "PRODUCTION.db")
-        for model in genai.list_models():
-            print(model.name)
-        self.MODEL = genai.GenerativeModel(
-            model_name="models/gemini-2.0-flash",
-            generation_config={"response_mime_type": "application/json"},
-            safety_settings={},
-            tools=None,
-            system_instruction=None,
-        )
-        TAVILY_MAX_RESULTS = 10
-        MODELNAME = "gpt-oss-1"
-        self.SEARCHTOOL = TavilySearchResults(
-            tavily_api_key=os.getenv("TAVILY_API_KEY"),
-            max_results=TAVILY_MAX_RESULTS,
-            include_answer=True,
-            include_raw_content=True,
-            include_tables=True,
-            include_domains=[
-                "help.sap.com",
-                "www.sap.com",
-                "developers.sap.com",
-                "api.sap.com",
-                "community.sap.com"
-            ],
-            include_images=True,
-        )
-        self.OLLAMAMODEL = ChatOllama(
-            model=MODELNAME,
+        self.DATASET = os.path.join(self.DIR, "datasets", "PRODUCTION.db")
+        self.LLM = ChatOllama(
+            model=model_name,
             temperature=0.7,
             streaming=False,
             verbose=True,
             num_ctx=10000,
             base_url="http://localhost:11434"
         )
+    
+    def vaccume(self) -> None:
+        connection: sqlite3.Connection = sqlite3.connect(self.DATASET, detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
+        cursor: sqlite3.Cursor = connection.cursor()
+        cursor.execute("VACUUM;")
+        connection.commit()
+        connection.close()
+        LOGGER.info("DATABASE VACUUM COMPLETED.")
+        return None
+    
+    @ExceptionHandelling
+    def document_investigation(self) -> None:
+        connection: sqlite3.Connection = sqlite3.connect(self.DATASET, detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
+        cursor: sqlite3.Cursor = connection.cursor()
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+        tables = cursor.fetchall()
+        LOGGER.info("TABLES IN THE DATABASE:")
+        #deleting the table's from production.db
+        # tables_to_delete = ["junk_documents", "empty_documents"]
+        # for table in tables_to_delete:
+        #     cursor.execute(f"DROP TABLE IF EXISTS {table};")
+        #     LOGGER.info(f"TABLE {table} DELETED IF EXISTS.")
+        for table in tables:
+            LOGGER.info(f"- {table[0]}")
+            #printing the length & schema of each table
+            cursor.execute(f"PRAGMA table_info({table[0]});")
+            columns = cursor.fetchall()
+            rows = cursor.execute(f"SELECT COUNT(*) FROM {table[0]};").fetchone()
+            LOGGER.info(f" TOTAL ROWS: {rows[0]}")
+            LOGGER.info(f" NO OF COLUMNS: {len(columns)}")
+            LOGGER.info("  COLUMNS:")
+            for column in columns:
+                LOGGER.info(f"    - {column[1]} ({column[2]})")
+        connection.commit()
+        connection.close()
+        return None
+    
+        
+if __name__ == "__main__":
+    hrag = HyperRetrivalAugmentedGeneration()
+    hrag.document_investigation()
+    hrag.vaccume()

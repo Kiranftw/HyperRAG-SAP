@@ -1004,3 +1004,154 @@ ValueError: Must have equal len keys and value when setting with an iterable
 2026-01-21 14:06:12,073 - INFO - FAISS INDEX GENERATED AND SAVED.
 2026-01-21 14:06:12,403 - INFO - RETRIEVED 4 DOCUMENTS FROM INDEX FOR QUERY: What is immune system?
 2026-01-21 14:06:12,403 - INFO - pip install deepagents
+2026-01-21 14:58:34,742 - INFO - Use pytorch device_name: cuda:0
+2026-01-21 14:58:34,743 - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2026-01-21 14:58:39,274 - INFO - FAISS INDEX GENERATED AND SAVED.
+2026-01-21 14:58:39,845 - INFO - RETRIEVED 4 DOCUMENTS FROM INDEX FOR QUERY: What is immune system?
+2026-01-21 16:29:25,533 - INFO - Use pytorch device_name: cuda:0
+2026-01-21 16:29:25,533 - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2026-01-21 16:30:06,177 - INFO - Use pytorch device_name: cuda:0
+2026-01-21 16:30:06,178 - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2026-01-21 16:30:44,796 - INFO - Use pytorch device_name: cuda:0
+2026-01-21 16:30:44,797 - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2026-01-21 16:33:50,625 - INFO - Use pytorch device_name: cuda:0
+2026-01-21 16:33:50,626 - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2026-01-22 11:39:49,110 - INFO - TABLES IN THE DATABASE:
+2026-01-22 11:39:49,111 - INFO - - documents
+2026-01-22 11:39:49,111 - INFO - - document_chunks
+2026-01-22 11:40:37,605 - INFO - TABLES IN THE DATABASE:
+2026-01-22 11:40:37,606 - INFO - - empty_documents
+2026-01-22 11:40:37,606 - INFO - - junk_documents
+2026-01-22 11:40:37,606 - INFO - - documents
+2026-01-22 11:40:37,606 - INFO - - documents_cleaned_test
+2026-01-22 11:42:13,729 - INFO - TABLES IN THE DATABASE:
+2026-01-22 11:42:13,729 - INFO - - empty_documents
+2026-01-22 11:42:13,729 - INFO -  NO OF COLUMNS: 5
+2026-01-22 11:42:13,729 - INFO -   COLUMNS:
+2026-01-22 11:42:13,730 - INFO -     - id (INTEGER)
+2026-01-22 11:42:13,730 - INFO -     - url (TEXT)
+2026-01-22 11:42:13,730 - INFO -     - title (TEXT)
+2026-01-22 11:42:13,730 - INFO -     - content (TEXT)
+2026-01-22 11:42:13,730 - INFO -     - images (TEXT)
+2026-01-22 11:42:13,730 - INFO - - junk_documents
+2026-01-22 11:42:13,731 - INFO -  NO OF COLUMNS: 5
+2026-01-22 11:42:13,731 - INFO -   COLUMNS:
+2026-01-22 11:42:13,731 - INFO -     - id (INTEGER)
+2026-01-22 11:42:13,731 - INFO -     - url (TEXT)
+2026-01-22 11:42:13,731 - INFO -     - title (TEXT)
+2026-01-22 11:42:13,731 - INFO -     - content (TEXT)
+2026-01-22 11:42:13,732 - INFO -     - images (TEXT)
+2026-01-22 11:42:13,732 - INFO - - documents
+2026-01-22 11:42:13,732 - INFO -  NO OF COLUMNS: 5
+2026-01-22 11:42:13,732 - INFO -   COLUMNS:
+2026-01-22 11:42:13,732 - INFO -     - id (INTEGER)
+2026-01-22 11:42:13,732 - INFO -     - url (TEXT)
+2026-01-22 11:42:13,732 - INFO -     - title (TEXT)
+2026-01-22 11:42:13,733 - INFO -     - content (TEXT)
+2026-01-22 11:42:13,733 - INFO -     - images (TEXT)
+2026-01-22 11:42:13,733 - INFO - - documents_cleaned_test
+2026-01-22 11:42:13,733 - INFO -  NO OF COLUMNS: 6
+2026-01-22 11:42:13,733 - INFO -   COLUMNS:
+2026-01-22 11:42:13,734 - INFO -     - id (INTEGER)
+2026-01-22 11:42:13,734 - INFO -     - url (TEXT)
+2026-01-22 11:42:13,734 - INFO -     - title (TEXT)
+2026-01-22 11:42:13,734 - INFO -     - content (TEXT)
+2026-01-22 11:42:13,734 - INFO -     - images (TEXT)
+2026-01-22 11:42:13,734 - INFO -     - cleaned_content (TEXT)
+2026-01-22 11:43:10,729 - INFO - TABLES IN THE DATABASE:
+2026-01-22 11:43:10,729 - INFO - - empty_documents
+2026-01-22 11:43:11,586 - INFO -  TOTAL ROWS: 9816
+2026-01-22 11:43:11,587 - INFO -  NO OF COLUMNS: 5
+2026-01-22 11:43:11,587 - INFO -   COLUMNS:
+2026-01-22 11:43:11,588 - INFO -     - id (INTEGER)
+2026-01-22 11:43:11,589 - INFO -     - url (TEXT)
+2026-01-22 11:43:11,589 - INFO -     - title (TEXT)
+2026-01-22 11:43:11,590 - INFO -     - content (TEXT)
+2026-01-22 11:43:11,590 - INFO -     - images (TEXT)
+2026-01-22 11:43:11,591 - INFO - - junk_documents
+2026-01-22 11:44:10,767 - INFO - TABLES IN THE DATABASE:
+2026-01-22 11:44:10,767 - INFO - - empty_documents
+2026-01-22 11:44:10,770 - INFO -  TOTAL ROWS: 9816
+2026-01-22 11:44:10,770 - INFO -  NO OF COLUMNS: 5
+2026-01-22 11:44:10,770 - INFO -   COLUMNS:
+2026-01-22 11:44:10,770 - INFO -     - id (INTEGER)
+2026-01-22 11:44:10,771 - INFO -     - url (TEXT)
+2026-01-22 11:44:10,771 - INFO -     - title (TEXT)
+2026-01-22 11:44:10,771 - INFO -     - content (TEXT)
+2026-01-22 11:44:10,771 - INFO -     - images (TEXT)
+2026-01-22 11:44:10,771 - INFO - - junk_documents
+2026-01-22 11:46:01,191 - INFO -  TOTAL ROWS: 82212
+2026-01-22 11:46:01,192 - INFO -  NO OF COLUMNS: 5
+2026-01-22 11:46:01,192 - INFO -   COLUMNS:
+2026-01-22 11:46:01,192 - INFO -     - id (INTEGER)
+2026-01-22 11:46:01,192 - INFO -     - url (TEXT)
+2026-01-22 11:46:01,192 - INFO -     - title (TEXT)
+2026-01-22 11:46:01,192 - INFO -     - content (TEXT)
+2026-01-22 11:46:01,192 - INFO -     - images (TEXT)
+2026-01-22 11:46:01,193 - INFO - - documents
+2026-01-22 11:46:39,625 - INFO -  TOTAL ROWS: 264333
+2026-01-22 11:46:39,625 - INFO -  NO OF COLUMNS: 5
+2026-01-22 11:46:39,626 - INFO -   COLUMNS:
+2026-01-22 11:46:39,626 - INFO -     - id (INTEGER)
+2026-01-22 11:46:39,626 - INFO -     - url (TEXT)
+2026-01-22 11:46:39,626 - INFO -     - title (TEXT)
+2026-01-22 11:46:39,626 - INFO -     - content (TEXT)
+2026-01-22 11:46:39,626 - INFO -     - images (TEXT)
+2026-01-22 11:46:39,626 - INFO - - documents_cleaned_test
+2026-01-22 11:47:12,709 - INFO -  TOTAL ROWS: 264333
+2026-01-22 11:47:12,709 - INFO -  NO OF COLUMNS: 6
+2026-01-22 11:47:12,709 - INFO -   COLUMNS:
+2026-01-22 11:47:12,709 - INFO -     - id (INTEGER)
+2026-01-22 11:47:12,709 - INFO -     - url (TEXT)
+2026-01-22 11:47:12,709 - INFO -     - title (TEXT)
+2026-01-22 11:47:12,709 - INFO -     - content (TEXT)
+2026-01-22 11:47:12,709 - INFO -     - images (TEXT)
+2026-01-22 11:47:12,710 - INFO -     - cleaned_content (TEXT)
+2026-01-22 11:55:50,114 - INFO - TABLES IN THE DATABASE:
+2026-01-22 11:55:58,385 - INFO - ⚠️EXCEPTION IN document_investigation: database is locked
+2026-01-22 11:57:20,420 - INFO - TABLES IN THE DATABASE:
+2026-01-22 11:58:24,963 - INFO - TABLE junk_documents DELETED IF EXISTS.
+2026-01-22 11:58:25,207 - INFO - TABLE empty_documents DELETED IF EXISTS.
+2026-01-22 11:58:25,207 - INFO - - empty_documents
+2026-01-22 11:58:25,207 - INFO - ⚠️EXCEPTION IN document_investigation: no such table: empty_documents
+2026-01-22 11:59:21,082 - INFO - TABLES IN THE DATABASE:
+2026-01-22 11:59:21,082 - INFO - - documents
+2026-01-22 11:59:21,365 - INFO -  TOTAL ROWS: 264333
+2026-01-22 11:59:21,365 - INFO -  NO OF COLUMNS: 5
+2026-01-22 11:59:21,365 - INFO -   COLUMNS:
+2026-01-22 11:59:21,366 - INFO -     - id (INTEGER)
+2026-01-22 11:59:21,366 - INFO -     - url (TEXT)
+2026-01-22 11:59:21,366 - INFO -     - title (TEXT)
+2026-01-22 11:59:21,367 - INFO -     - content (TEXT)
+2026-01-22 11:59:21,367 - INFO -     - images (TEXT)
+2026-01-22 11:59:21,367 - INFO - - documents_cleaned_test
+2026-01-22 11:59:21,634 - INFO -  TOTAL ROWS: 264333
+2026-01-22 11:59:21,634 - INFO -  NO OF COLUMNS: 6
+2026-01-22 11:59:21,634 - INFO -   COLUMNS:
+2026-01-22 11:59:21,634 - INFO -     - id (INTEGER)
+2026-01-22 11:59:21,635 - INFO -     - url (TEXT)
+2026-01-22 11:59:21,635 - INFO -     - title (TEXT)
+2026-01-22 11:59:21,635 - INFO -     - content (TEXT)
+2026-01-22 11:59:21,635 - INFO -     - images (TEXT)
+2026-01-22 11:59:21,635 - INFO -     - cleaned_content (TEXT)
+2026-01-22 12:03:59,094 - INFO - TABLES IN THE DATABASE:
+2026-01-22 12:03:59,094 - INFO - - documents
+2026-01-22 12:03:59,228 - INFO -  TOTAL ROWS: 264333
+2026-01-22 12:03:59,228 - INFO -  NO OF COLUMNS: 5
+2026-01-22 12:03:59,228 - INFO -   COLUMNS:
+2026-01-22 12:03:59,228 - INFO -     - id (INTEGER)
+2026-01-22 12:03:59,228 - INFO -     - url (TEXT)
+2026-01-22 12:03:59,229 - INFO -     - title (TEXT)
+2026-01-22 12:03:59,229 - INFO -     - content (TEXT)
+2026-01-22 12:03:59,229 - INFO -     - images (TEXT)
+2026-01-22 12:03:59,229 - INFO - - documents_cleaned_test
+2026-01-22 12:03:59,357 - INFO -  TOTAL ROWS: 264333
+2026-01-22 12:03:59,357 - INFO -  NO OF COLUMNS: 6
+2026-01-22 12:03:59,358 - INFO -   COLUMNS:
+2026-01-22 12:03:59,358 - INFO -     - id (INTEGER)
+2026-01-22 12:03:59,358 - INFO -     - url (TEXT)
+2026-01-22 12:03:59,358 - INFO -     - title (TEXT)
+2026-01-22 12:03:59,358 - INFO -     - content (TEXT)
+2026-01-22 12:03:59,358 - INFO -     - images (TEXT)
+2026-01-22 12:03:59,359 - INFO -     - cleaned_content (TEXT)
+2026-01-22 12:08:39,221 - INFO - DATABASE VACUUM COMPLETED.
