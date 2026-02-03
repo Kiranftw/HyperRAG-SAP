@@ -1,3 +1,4 @@
+from copyreg import pickle
 import os
 import sqlite3
 from functools import wraps
@@ -10,7 +11,11 @@ import numpy as np
 load_dotenv(find_dotenv())
 from typing import List, Optional, Dict, Any
 from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_community.vectorstores import FAISS
+import faiss
 from sentence_transformers import SentenceTransformer
+from langchain_community.docstore.in_memory import InMemoryDocstore
+from langchain_core.documents import Document
 import torch
 
 LOG_FORMAT = "%(asctime)s - %(levelname)s - %(message)s"
@@ -37,10 +42,9 @@ def ExceptionHandelling(func):
 
 class HyperRetrivalAugmentedGeneration:
     def __init__(self, model_name: str = "gpt-oss:120b-cloud") -> None:
-        self.DIR = os.path.dirname(os.path.abspath(__file__))
-        self.DATASET = os.path.join(self.DIR, "datasets", "PRODUCTION_backup.db")
+        self.DIR = "/home/kiranftw/HyperRAG-SAP"
+        self.DATASET = os.path.join(self.DIR, "datasets", "PRODUCTION.db")
         self.splitting = ContentSplitting()
-
     
     def vaccume(self) -> None:
         connection: sqlite3.Connection = sqlite3.connect(self.DATASET, detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
@@ -50,15 +54,7 @@ class HyperRetrivalAugmentedGeneration:
         connection.close()
         LOGGER.info("DATABASE VACUUM COMPLETED.")
         return None
-    
-    def document_splitting(self) -> None:
-        if not os.path.exists(self.DATASET):
-            LOGGER.info(f"⚠️ DATABASE '{self.DATASET}' DOES NOT EXIST. ABORTING DOCUMENT SPLITTING.")
-            return None
-        self.splitting.data_splitting(self.DATASET)
-        LOGGER.info("DOCUMENT SPLITTING COMPLETED.")
-        return None
-      
+     
     @ExceptionHandelling
     def document_investigation(self) -> None:
         connection: sqlite3.Connection = sqlite3.connect(self.DATASET, detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
@@ -88,7 +84,7 @@ class HyperRetrivalAugmentedGeneration:
         connection.commit()
         connection.close()
         return None    
-    
+    @ExceptionHandelling
     def chunking(self, databasename: str) -> None:
         if not os.path.exists(databasename):
             LOGGER.info(f"⚠️ DATABASE '{databasename}' DOES NOT EXIST. ABORTING CHUNKING.")
@@ -193,5 +189,75 @@ class HyperRetrivalAugmentedGeneration:
         LOGGER.info("✅ EMBEDDING GENERATION COMPLETED.")
         return None
 
+class FAISSIndexGeneration(HyperRetrivalAugmentedGeneration):
+    def __init__(self) -> None:
+        super().__init__()
+        self.embedding_function = HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2")
+
+    def index_generation(self) -> None:
+        #NOTE:# Using FAISS IndexHNSWFlat as the primary vector index. This index is chosen
+        # for maximum retrieval speed and near-exact recall on large-scale embeddings
+        # (~250k+ vectors). Memory usage is intentionally not optimized in favor of
+        # low-latency, high-quality semantic search for RAG pipelines. The key features include:
+        # - Ultra-fast ANN search (~2–5 ms latency at 250k vectors)
+        # - Near-exact recall with no vector compression (high embedding fidelity)
+        # - Graph-based HNSW index, ideal for RAG Fusion and multi-query retrieval
+        if not os.path.exists(self.DATASET):
+            LOGGER.info(f"⚠️ DATABASE '{self.DATASET}' DOES NOT EXIST. ABORTING INDEX GENERATION.")
+            return None
+        with sqlite3.connect(self.DATASET, detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES, timeout=5) as connection:
+            cursor: sqlite3.Cursor = connection.cursor()
+            TABLENAME = "document_chunks"
+            EMBEDDING_COLUMN = "embedding"
+            # Check if chunks table exists
+            cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name=?;", (TABLENAME,))
+            if cursor.fetchone() is None:
+                LOGGER.info(f"⚠️ TABLE '{TABLENAME}' DOES NOT EXIST. ABORTING INDEX GENERATION.")
+                return None
+            # Fetch all embeddings and their corresponding chunk IDs
+            cursor.execute(f"SELECT id, content, {EMBEDDING_COLUMN} FROM {TABLENAME} WHERE {EMBEDDING_COLUMN} IS NOT NULL;")
+            rows = cursor.fetchall()
+            if not rows:
+                LOGGER.info(f"⚠️ NO EMBEDDINGS FOUND IN TABLE '{TABLENAME}'. ABORTING INDEX GENERATION.")
+                return None
+            ids = []
+            embeddings = []
+            docstore_dict = {}
+            for row in rows:
+                doc_id = row[0]
+                content = row[1]
+                emb_bytes = row[2]
+                ids.append(doc_id)
+                embeddings.append(np.frombuffer(emb_bytes, dtype=np.float32))
+                docstore_dict[str(doc_id)] = Document(page_content=content if content else "")
+            
+            # Create FAISS index
+            dimension = len(embeddings[0])
+            faiss_index = faiss.IndexHNSWFlat(dimension, 32)  # HNSW with 32 neighbors
+            faiss_index.hnsw.efConstruction = 200  # Construction parameter for index building
+            faiss_index.hnsw.efSearch = 64  # Search parameter for querying
+            
+            xb = np.vstack(embeddings).astype(np.float32)
+            # Add vectors with IDs to enable chunk ID mapping
+            index = faiss.IndexIDMap(faiss_index)
+            index.add_with_ids(xb, np.array(ids, dtype=np.int64))
+            LOGGER.info(f"✅ FAISS INDEX CREATED WITH {index.ntotal} VECTORS OF DIMENSION {dimension}.")
+            # Save FAISS index to disk with populated docstore
+            docstore = InMemoryDocstore(docstore_dict)
+            index_to_docstore_id = {i: str(i) for i in ids}
+            vectorstore = FAISS(embedding_function=self.embedding_function, index=index, docstore=docstore, index_to_docstore_id=index_to_docstore_id)
+            faiss_index_path = os.path.join(self.DIR, "faiss_index")
+            if not os.path.exists(faiss_index_path):
+                os.makedirs(faiss_index_path)
+            vectorstore.save_local(faiss_index_path)
+            LOGGER.info(f"✅ FAISS INDEX GENERATED AND SAVED TO '{faiss_index_path}'.")
+        return None
+    
 if __name__ == "__main__":
-    HyperRetrivalAugmentedGeneration().document_investigation()
+    hyper_rag = HyperRetrivalAugmentedGeneration()
+    # hyper_rag.vaccume()
+    # hyper_rag.document_investigation()
+    # hyper_rag.chunking(hyper_rag.DATASET)
+    # hyper_rag.embedding_generation()
+    faiss_indexer = FAISSIndexGeneration()
+    faiss_indexer.index_generation()
