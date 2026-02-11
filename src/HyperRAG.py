@@ -1,5 +1,7 @@
 from copyreg import pickle
 import os
+import shutil
+import shutil
 import sqlite3
 from functools import wraps
 import logging
@@ -10,13 +12,16 @@ from chunking import ContentSplitting
 import numpy as np
 load_dotenv(find_dotenv())
 from typing import List, Optional, Dict, Any
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 import faiss
 from sentence_transformers import SentenceTransformer
 from langchain_community.docstore.in_memory import InMemoryDocstore
+from langchain_community.retrievers import BM25Retriever
 from langchain_core.documents import Document
 import torch
+from concurrent.futures import ThreadPoolExecutor, as_completed
+import asyncio
 
 LOG_FORMAT = "%(asctime)s - %(levelname)s - %(message)s"
 logging.basicConfig(
@@ -205,6 +210,10 @@ class FAISSIndexGeneration(HyperRetrivalAugmentedGeneration):
         if not os.path.exists(self.DATASET):
             LOGGER.info(f"⚠️ DATABASE '{self.DATASET}' DOES NOT EXIST. ABORTING INDEX GENERATION.")
             return None
+        
+        faiss_index_path = os.path.join(self.DIR, "faiss_index")
+        os.makedirs(faiss_index_path, exist_ok=True)
+        
         with sqlite3.connect(self.DATASET, detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES, timeout=5) as connection:
             cursor: sqlite3.Cursor = connection.cursor()
             TABLENAME = "document_chunks"
@@ -214,50 +223,82 @@ class FAISSIndexGeneration(HyperRetrivalAugmentedGeneration):
             if cursor.fetchone() is None:
                 LOGGER.info(f"⚠️ TABLE '{TABLENAME}' DOES NOT EXIST. ABORTING INDEX GENERATION.")
                 return None
-            # Fetch all embeddings and their corresponding chunk IDs
-            cursor.execute(f"SELECT id, content, {EMBEDDING_COLUMN} FROM {TABLENAME} WHERE {EMBEDDING_COLUMN} IS NOT NULL;")
-            rows = cursor.fetchall()
-            if not rows:
-                LOGGER.info(f"⚠️ NO EMBEDDINGS FOUND IN TABLE '{TABLENAME}'. ABORTING INDEX GENERATION.")
-                return None
-            ids = []
-            embeddings = []
+            BATCH_SIZE = 5000
+            ids_batch = []
+            emb_batch = []
             docstore_dict = {}
-            for row in rows:
-                doc_id = row[0]
-                content = row[1]
-                emb_bytes = row[2]
-                ids.append(doc_id)
-                embeddings.append(np.frombuffer(emb_bytes, dtype=np.float32))
-                docstore_dict[str(doc_id)] = Document(page_content=content if content else "")
-            
-            # Create FAISS index
-            dimension = len(embeddings[0])
-            faiss_index = faiss.IndexHNSWFlat(dimension, 32)  # HNSW with 32 neighbors
-            faiss_index.hnsw.efConstruction = 200  # Construction parameter for index building
-            faiss_index.hnsw.efSearch = 64  # Search parameter for querying
-            
-            xb = np.vstack(embeddings).astype(np.float32)
-            # Add vectors with IDs to enable chunk ID mapping
-            index = faiss.IndexIDMap(faiss_index)
-            index.add_with_ids(xb, np.array(ids, dtype=np.int64))
-            LOGGER.info(f"✅ FAISS INDEX CREATED WITH {index.ntotal} VECTORS OF DIMENSION {dimension}.")
-            # Save FAISS index to disk with populated docstore
-            docstore = InMemoryDocstore(docstore_dict)
-            index_to_docstore_id = {i: str(i) for i in ids}
-            vectorstore = FAISS(embedding_function=self.embedding_function, index=index, docstore=docstore, index_to_docstore_id=index_to_docstore_id)
-            faiss_index_path = os.path.join(self.DIR, "faiss_index")
-            if not os.path.exists(faiss_index_path):
-                os.makedirs(faiss_index_path)
-            vectorstore.save_local(faiss_index_path)
-            LOGGER.info(f"✅ FAISS INDEX GENERATED AND SAVED TO '{faiss_index_path}'.")
-        return None
-    
-if __name__ == "__main__":
-    hyper_rag = HyperRetrivalAugmentedGeneration()
-    # hyper_rag.vaccume()
-    # hyper_rag.document_investigation()
-    # hyper_rag.chunking(hyper_rag.DATASET)
-    # hyper_rag.embedding_generation()
-    faiss_indexer = FAISSIndexGeneration()
-    faiss_indexer.index_generation()
+
+            cursor.execute("""
+                SELECT 
+                    dc.id AS chunk_id,
+                    dc.document_id,
+                    dc.content,
+                    dc.embedding,
+                    d.url,
+                    d.title,
+                    d.images
+                FROM document_chunks dc
+                JOIN documents d ON dc.document_id = d.id
+                WHERE dc.embedding IS NOT NULL;
+            """)
+            index = None
+            dimension = None
+            total_vectors = 0
+
+            while True:
+                rows = cursor.fetchmany(BATCH_SIZE)
+                if not rows:
+                    break
+                for row in rows:
+                    chunk_id = row[0]
+                    document_id = row[1]
+                    content = row[2]
+                    emb_bytes = row[3]
+                    url = row[4]
+                    title = row[5]
+                    images = row[6]
+
+                    vector = np.frombuffer(emb_bytes, dtype=np.float32)
+                    if dimension is None:
+                        dimension = len(vector)
+                        base_index = faiss.IndexHNSWFlat(dimension, 32)
+                        base_index.hnsw.efConstruction = 200
+                        base_index.hnsw.efSearch = 64
+                        index = faiss.IndexIDMap2(base_index)
+
+                    ids_batch.append(chunk_id)
+                    emb_batch.append(vector)
+
+                    # Store metadata
+                    docstore_dict[str(chunk_id)] = Document(
+                        page_content=content or "",
+                        metadata={
+                            "chunk_id": chunk_id,
+                            "document_id": document_id,
+                            "url": url,
+                            "title": title,
+                            "images": images,
+                        }
+                    )
+                xb = np.vstack(emb_batch).astype(np.float32)
+                ids_array = np.array(ids_batch, dtype=np.int64)
+
+                index.add_with_ids(xb, ids_array)
+                total_vectors += len(ids_batch)
+                LOGGER.info(f"ADDED  {total_vectors} VECTORS SO FAR")
+                LOGGER.info(f"BATCH OF {len(ids_batch)} VECTORS ADDED LAST CHUNKID {ids_batch[-1]}")
+                ids_batch.clear()
+                emb_batch.clear()
+
+            # Create vectorstore and save index after all vectors are added
+            if index is not None and dimension is not None:
+                docstore = InMemoryDocstore(docstore_dict)
+                vectorstore = FAISS(embedding_function=self.embedding_function, 
+                                   index=index, 
+                                   docstore=docstore, 
+                                   index_to_docstore_id={i: str(i) for i in range(index.ntotal)})
+                vectorstore.save_local(faiss_index_path)
+                LOGGER.info(f"✅ FAISS INDEX SAVED TO '{faiss_index_path}'")
+                LOGGER.info(f"✅ FAISS INDEX CREATED WITH {index.ntotal} VECTORS | DIMENSION={dimension}")
+            else:
+                LOGGER.info(f"⚠️ NO VECTORS TO INDEX. INDEX GENERATION SKIPPED.")
