@@ -197,7 +197,7 @@ class HyperRetrivalAugmentedGeneration:
 class FAISSIndexGeneration(HyperRetrivalAugmentedGeneration):
     def __init__(self) -> None:
         super().__init__()
-        self.embedding_function = HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2")
+        # self.embedding_function = HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2")
 
     def index_generation(self) -> None:
         #NOTE:# Using FAISS IndexHNSWFlat as the primary vector index. This index is chosen

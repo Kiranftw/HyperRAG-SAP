@@ -1,6 +1,8 @@
 from urllib import response
 
 from click import prompt
+from langchain_huggingface import HuggingFaceEmbeddings
+import torch
 from HyperRAG import HyperRetrivalAugmentedGeneration,LOGGER, ExceptionHandelling, FAISSIndexGeneration
 from langchain_ollama import ChatOllama
 from google import genai, generativeai
@@ -26,6 +28,7 @@ from google.genai import types
 from langchain_community.vectorstores import FAISS
 from google.genai.errors import ClientError
 import requests
+import numpy as np
 import pytesseract
 from dotenv import load_dotenv, find_dotenv
 pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract'
@@ -65,6 +68,9 @@ class AgenticRAG(FAISSIndexGeneration, HyperRetrivalAugmentedGeneration):
         self.ORCHESTRATION_SERVICE = OrchestrationService(proxy_client=self.PROXY_CLIENT)
         self.LLM_MODEL = LLM(name=model_name, parameters={"temperature": 0.7})
         self.parser = SimpleJsonOutputParser()
+        LOGGER.info("ROOT DIRECTORY: " + self.DIR)
+        print("Initializing Embedding Function...")
+        self.embedding_function = HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2", model_kwargs={"device": "cuda" if torch.cuda.is_available() else "cpu"})
 
     @ExceptionHandelling
     def document_handelling(self, documents: List[str]) -> List[str]:
@@ -96,68 +102,65 @@ class AgenticRAG(FAISSIndexGeneration, HyperRetrivalAugmentedGeneration):
         return processed_documents
     
     @ExceptionHandelling
-    def retrival_fusion(self, query: str) -> Any:
+    def retrival_fusion(self, query: str):
         DECOMPOSED_QUERIES_COUNT = 5
-        @staticmethod
-        def query_decomposition(query: str) -> list:
-            with open(self.DIR + "/prompts/query_decomposition.txt", "r") as file:
-                prompt_template = file.read()
-            prompt = (
-                prompt_template
-                .replace("{{ query }}", query)
-                .replace("{{ number }}", str(DECOMPOSED_QUERIES_COUNT))
-            )
-            response = self.ollama_model.invoke([SystemMessage(content=prompt)])
-            try:
-                decomposed_queries = self.parser.parse(response.content)
-                if isinstance(decomposed_queries, list) and all(isinstance(q, str) for q in decomposed_queries):
-                    return decomposed_queries
-                else:
-                    LOGGER.warning("PARSING ERROR: DECOMPOSED QUERIES ARE NOT IN THE EXPECTED FORMAT. RETURNING RAW RESPONSE.")
-                    return [response.content]
-            except Exception as e:
-                LOGGER.error(f"EXCEPTION DURING QUERY DECOMPOSITION: {e}. RETURNING RAW RESPONSE.")
-                return [response.content]
-        @staticmethod
-        async def searchfaiss(self, queries: List[str], k: int = 5) -> List[Any]:
-            faissindex_path = self.DIR + "/faiss_index"
-            if not os.path.exists(faissindex_path):
-                LOGGER.info(f"⚠️ FAISS INDEX NOT FOUND AT '{faissindex_path}'. ABORTING SEARCH.")
-                return []
-            vectorstore = FAISS.load_local(faissindex_path, self.embedding_function,
-                allow_dangerous_deserialization=True
-            )
-            search_results = []
-            for query in queries:
-                try:
-                    results = vectorstore.similarity_search(query, k=k)
-                    search_results.append({"query": query, "results": results})
-                except Exception as e:
-                    LOGGER.error(f"EXCEPTION DURING FAISS SEARCH FOR QUERY '{query}': {e}")
-                    search_results.append({"query": query, "results": [], "error": str(e)})
-            return search_results
-        queries = query_decomposition(query)
+        with open(self.DIR + "/prompts/query_decomposition.txt", "r") as file:
+            prompt_template = file.read()
+        prompt = (
+            prompt_template
+            .replace("{{ query }}", query)
+            .replace("{{ number }}", str(DECOMPOSED_QUERIES_COUNT))
+        )
+        response = self.ollama_model.invoke([SystemMessage(content=prompt)])
+        queries = []
+        try:
+            content = response.content if isinstance(response.content, str) else str(response.content)
+            decomposed = self.parser.parse(content)
+            queries = [
+                q if isinstance(q, str) else q.get("subquery")
+                for q in decomposed
+            ] if isinstance(decomposed, list) else []
+
+            queries = [q for q in queries if isinstance(q, str)]
+        except Exception as e:
+            LOGGER.error(f"QUERY DECOMPOSITION FAILED: {e}")
+            return None
         if not queries:
-            LOGGER.warning("NO QUERIES GENERATED FROM DECOMPOSITION. ABORTING RETRIEVAL.")
-            return []
-        with ThreadPoolExecutor() as executor:
-            future_to_query = {executor.submit(searchfaiss, self, [query]): query for query in queries}
-            search_results = []
-            for future in as_completed(future_to_query):
-                query = future_to_query[future]
-                try:
-                    result = future.result()
-                    search_results.append({"query": query, "results": result})
-                except Exception as e:
-                    LOGGER.error(f"EXCEPTION DURING ASYNC FAISS SEARCH FOR QUERY '{query}': {e}")
-                    search_results.append({"query": query, "results": [], "error": str(e)})
-        LOGGER.info(f"SEARCH RESULTS: {search_results}")
+            LOGGER.warning("No queries decomposed. Aborting retrieval.")
+            return None
+        print("DECOMPOSED QUERIES: ", queries)
+        FAISSINDEXPATH = self.DIR + "/faiss_index"
+        if not os.path.exists(FAISSINDEXPATH):
+            LOGGER.info(f"⚠️ FAISS INDEX NOT FOUND AT '{FAISSINDEXPATH}'. ABORTING RETRIEVAL.")
+            return None
+        vectorstore = FAISS.load_local(folder_path=FAISSINDEXPATH, embeddings=self.embedding_function, allow_dangerous_deserialization=True
+        )
+        search_results = []
+        query_vectors = self.embedding_function.embed_documents(queries)
+        query_matrix = np.array(query_vectors, dtype=np.float32)
+        D, I = vectorstore.index.search(query_matrix, k=5)
+        for query_idx, query in enumerate(queries):
+            for rank, (distance, doc_index) in enumerate(zip(D[query_idx], I[query_idx])):
+                if doc_index == -1:
+                    continue
+                doc_id = vectorstore.index_to_docstore_id[doc_index]
+                retrieved_doc = vectorstore.docstore.search(doc_id)
+                search_results.append({
+                    "query": query,
+                    "retrieved_doc": retrieved_doc,
+                    "distance": float(distance),
+                    "rank": rank + 1
+                })
+        #sorting results based on rank
+        search_results.sort(key=lambda x: x["rank"],)
         return search_results
 
 if __name__ == "__main__":
     agentic_rag = AgenticRAG()
     query = "What are the key insights from the sales data in sales_data.csv and the market trends in market_trends.pdf?"
     response = agentic_rag.retrival_fusion(query)
+    print("RESPONSE: ", response)
+    print(len(response))
     # response = agentic_rag.ollama_model.invoke([
     #     SystemMessage(content="Decompose the following query into 5 sub-queries: " + query)
     # ])
