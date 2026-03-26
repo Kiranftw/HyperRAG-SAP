@@ -110,7 +110,7 @@ class HyperRetrivalAugmentedGeneration:
             LOGGER.info("CLEARING CUDA CACHE... & USING GPU FOR EMBEDDING GENERATION.")
             torch.cuda.empty_cache()
         embedding_model = SentenceTransformer(EMBEDDING_MODEL, device=self.DEVICE)
-        if self.DEVICE == "cuda":
+        if self.DEVICE == "cuda": 
             embedding_model.half()
             LOGGER.info("FP16 INFERENCE ENABLED: Compatible with existing docs (Storage remains FP32).")
         # Smaller batch size to avoid CUDA OOM - adjust if needed

@@ -1,4 +1,5 @@
 venv/
 .env
-datasets/
 faiss_index/
+datasets/*
+!datasets/*.db

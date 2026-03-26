@@ -15,11 +15,14 @@ from gen_ai_hub.orchestration.models.llm import LLM
 from gen_ai_hub.orchestration.models.config import OrchestrationConfig
 from gen_ai_hub.orchestration.models.template import Template, TemplateValue
 from gen_ai_hub.orchestration.models.message import SystemMessage as OrchestrationSystemMessage, UserMessage as OrchestrationUserMessage
+from langchain_community.retrievers import BM25Retriever
 from gen_ai_hub.orchestration.service import OrchestrationService
 from langchain_community.document_loaders import TextLoader, JSONLoader, CSVLoader, PyPDFLoader
 from PIL import Image
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import SimpleJsonOutputParser
+from langchain_community.vectorstores import FAISS
+from langchain_community.retrievers import BM25Retriever
 from typing import List, Dict, Any, Optional, Union, Tuple
 import json
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -100,60 +103,6 @@ class AgenticRAG(FAISSIndexGeneration, HyperRetrivalAugmentedGeneration):
             else:
                 raise ValueError(f"UNSUPPORTED FILE TYPE: {endswith}")
         return processed_documents
-    
-    @ExceptionHandelling
-    def retrival_fusion(self, query: str):
-        DECOMPOSED_QUERIES_COUNT = 5
-        with open(self.DIR + "/prompts/query_decomposition.txt", "r") as file:
-            prompt_template = file.read()
-        prompt = (
-            prompt_template
-            .replace("{{ query }}", query)
-            .replace("{{ number }}", str(DECOMPOSED_QUERIES_COUNT))
-        )
-        response = self.ollama_model.invoke([SystemMessage(content=prompt)])
-        queries = []
-        try:
-            content = response.content if isinstance(response.content, str) else str(response.content)
-            decomposed = self.parser.parse(content)
-            queries = [
-                q if isinstance(q, str) else q.get("subquery")
-                for q in decomposed
-            ] if isinstance(decomposed, list) else []
-
-            queries = [q for q in queries if isinstance(q, str)]
-        except Exception as e:
-            LOGGER.error(f"QUERY DECOMPOSITION FAILED: {e}")
-            return None
-        if not queries:
-            LOGGER.warning("No queries decomposed. Aborting retrieval.")
-            return None
-        print("DECOMPOSED QUERIES: ", queries)
-        FAISSINDEXPATH = self.DIR + "/faiss_index"
-        if not os.path.exists(FAISSINDEXPATH):
-            LOGGER.info(f"⚠️ FAISS INDEX NOT FOUND AT '{FAISSINDEXPATH}'. ABORTING RETRIEVAL.")
-            return None
-        vectorstore = FAISS.load_local(folder_path=FAISSINDEXPATH, embeddings=self.embedding_function, allow_dangerous_deserialization=True
-        )
-        search_results = []
-        query_vectors = self.embedding_function.embed_documents(queries)
-        query_matrix = np.array(query_vectors, dtype=np.float32)
-        D, I = vectorstore.index.search(query_matrix, k=5)
-        for query_idx, query in enumerate(queries):
-            for rank, (distance, doc_index) in enumerate(zip(D[query_idx], I[query_idx])):
-                if doc_index == -1:
-                    continue
-                doc_id = vectorstore.index_to_docstore_id[doc_index]
-                retrieved_doc = vectorstore.docstore.search(doc_id)
-                search_results.append({
-                    "query": query,
-                    "retrieved_doc": retrieved_doc,
-                    "distance": float(distance),
-                    "rank": rank + 1
-                })
-        #sorting results based on rank
-        search_results.sort(key=lambda x: x["rank"],)
-        return search_results
 
 if __name__ == "__main__":
     agentic_rag = AgenticRAG()
