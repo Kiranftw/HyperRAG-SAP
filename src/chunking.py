@@ -105,15 +105,3 @@ class ContentSplitting:
             connection.commit()
         LOGGER.info("DATA SPLITTING COMPLETED.")
         return None
-
-import requests
-import json
-def main():
-    invoice = requests.get("http://127.0.0.1:5000/getdata")
-    print(type(invoice.text))
-    data = json.loads(invoice.text)
-    print(type(data))
-    print(data)
-                           
-if __name__ == "__main__":
-    main()

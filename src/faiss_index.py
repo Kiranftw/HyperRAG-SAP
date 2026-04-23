@@ -10,7 +10,6 @@ from dotenv import load_dotenv, find_dotenv
 import google.genai as genai
 from chunking import ContentSplitting
 import numpy as np
-load_dotenv(find_dotenv())
 from typing import List, Optional, Dict, Any
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
@@ -46,6 +45,7 @@ def ExceptionHandelling(func):
     return wrapper
 
 class HyperRetrivalAugmentedGeneration:
+    load_dotenv(find_dotenv())
     def __init__(self, model_name: str = "gpt-oss:120b-cloud") -> None:
         self.DIR = "/home/kiranftw/HyperRAG-SAP"
         self.DATASET = os.path.join(self.DIR, "datasets", "PRODUCTION.db")
