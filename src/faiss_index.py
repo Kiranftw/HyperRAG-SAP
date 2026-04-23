@@ -128,7 +128,7 @@ class HyperRetrivalAugmentedGeneration:
                 LOGGER.info(f"⚠️ TABLE '{TABLENAME}' DOES NOT EXIST. ABORTING EMBEDDING GENERATION.")
                 return None
             # Add embedding column if it doesn't exist
-            cursor.execute(f"PRAGMA table_info({TABLENAME});")
+            cursor.execute(f"PRAGMA table_info({TABLENAME});") 
             columns = [info[1] for info in cursor.fetchall()]
             # if EMBEDDING_COLUMN in columns:
             #     cursor.execute(f"ALTER TABLE {TABLENAME} DROP COLUMN {EMBEDDING_COLUMN};")

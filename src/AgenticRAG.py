@@ -71,9 +71,11 @@ class AgenticRAG(FAISSIndexGeneration, HyperRetrivalAugmentedGeneration):
             ],
             include_images=True,
         )
+        # Call dirname twice: once to get the directory of the file (src), and once to get its parent (root)
+        self.ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ Call dirname twice: once to get the directory of the file (src), and once to get its parent (root)
+        self.ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         self.parser = SimpleJsonOutputParser()
-        LOGGER.info("ROOT DIRECTORY: " + self.DIR)
-        print("Initializing Embedding Function...")
         self.embedding_function = HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2", model_kwargs={"device": "cuda" if torch.cuda.is_available() else "cpu"})
         #connecting elasticsearch through docker continer with a persistant volume
         self.es = Elasticsearch(
@@ -321,12 +323,12 @@ class AgenticRAG(FAISSIndexGeneration, HyperRetrivalAugmentedGeneration):
         # Process Sparse
         sparse_hits = sparse_results.get("hits", {}).get("hits", []) if isinstance(sparse_results, dict) else getattr(sparse_results, 'body', {}).get("hits", {}).get("hits", [])
         #store sparse results in a file
-        with open("sparse_results.json", "w") as f:
-            json.dump(sparse_hits, f, indent=2)
+        # with open(os.path.join(os.getcwd(),"datasets","sparse_results.json"), "w") as f:
+        #     json.dump(sparse_hits, f, indent=2)
         #store dense results in a file. We must normalize the object into a JSON-serializable schema
-        with open("dense_results.json", "w") as f:
-            dense_json = [{"page_content": doc.page_content, "metadata": doc.metadata, "score": float(score)} for doc, score in dense_results]
-            json.dump(dense_json, f, indent=2)
+        # with open(os.path.join(os.getcwd(),"datasets","dense_results.json"), "w") as f:
+        #     dense_json = [{"page_content": doc.page_content, "metadata": doc.metadata, "score": float(score)} for doc, score in dense_results]
+        #     json.dump(dense_json, f, indent=2)
         #calculating RRF scores
         for rank, hit in enumerate(sparse_hits):
             source = hit.get("_source", {})
@@ -384,22 +386,63 @@ class AgenticRAG(FAISSIndexGeneration, HyperRetrivalAugmentedGeneration):
             doc = final_results[result.index]
             doc["rerank_score"] = result.relevance_score
             reranked_results.append(doc)
-        with open("final_results.json", "w") as f:
-            json.dump(reranked_results, f, indent=2)
+        # with open(os.path.join(os.getcwd(),"datasets","final_results.json"), "w") as f:
+        #     json.dump(reranked_results, f, indent=2)
         return reranked_results
     
-    def query_decomposition(self, query: str) -> Optional[List[Document]]:
+    def query_decomposition(self, query: str) -> List[str]:
         """
-        Decompose a complex query into multiple simple queries.
+        Decompose a complex, multi-intent user query into multiple independent sub-queries.
+        This method uses a Generative LLM to analyze the input query and break it down into 
+        atomic, modular questions. It enforces specific constraints such as expanding vague 
+        acronyms or pronouns into full domain names (e.g., "SAP S/4HANA Cloud Public Edition") 
+        to maximize exact-match keyword hits in the sparse BM25 retrieval stage.
         Args:
-            query: User query text.
-        Returns:
-            A list of simple queries.
+            query (str): The originaluery.
+            
+        Returself.ROOT     List[str]: A list of optimized, contextually independent sub-queries.
         """
-        pass
-
+        #Load decomposition prompt
+        with open(os.path.join(self.ROOT,"prompts","query_decomposition.txt"), "r") as file:
+            decomposition_prompt = file.read()
+        #Fill the prompt with the user query
+        decomposition_prompt = decomposition_prompt.replace("{USER_QUERY_GOES_HERE}", query)
+        #Run the decomposition prompt through the LLM
+        #command-a-03-2025	Most capable, complex reasoning and agent            # We must use ClientV2 because the V1 `search_queries_only` parameter was fully deprecated and removed.
+            # Using ClientV2 with response_format={"type": "json_object"} is the modern standard.
+            client = getattr(self, 'cohere_reranker', None) or cohere.ClientV2(os.getenv("COHERE_API_KEY"))
+            
+            response = client.chat(
+                model="command-r-plus",
+                messages=[
+                    {"role": "system", "content": decomposition_prompt},
+                    {"role": "user", "content": query}
+                ],
+                response_format={"type": "json_object"},
+                temperature=0.7
+            )
+            # Parse the JSON response
+            content = response.message.content[0].text
+            # Sometimes LLMs wrap JSON in markdown blocks
+            if content.startswith("```json"):
+                content = content.replace("```json\\n", "").replace("```", "").strip()
+            elif content.startswith("```"):
+                content = content.replace("```\\n", "").replace("```", "").strip()
+            parsed_json = json.loads(content)
+            sub_queries = parsed_json.get("sub_queries", [query])
+            return sub_queries
+        except Exception as e:
+            print(f"Error during query decomposition: {e}")
+            return [query]
+(query.text)
+            return augmented_queries.search_queries
+        except Exception as e:
+            print(f"Error: {e}")
+            return None
+        
+            
 if __name__ == "__main__":
     agentic_rag = AgenticRAG()
     query="Explain me about the data migration strategies in SAP S/4HANA Cloud Public Edition? and Explain me about differences between SAP S/4HANA Cloud Public Edition and SAP S/4HANA Cloud Private Edition?"
-    final_results = asyncio.run(agentic_rag.hybrid_search(query))
-    print(final_results)
+    queries = agentic_rag.query_decomposition(query)
+    print(queries)
