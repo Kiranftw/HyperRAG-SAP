@@ -22,8 +22,10 @@ from langchain_community.vectorstores import FAISS
 from langchain_community.retrievers import BM25Retriever
 from typing import List, Dict, Any, Optional, Union, Tuple
 import json
+from langchain.tools import tool,BaseTool
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain import tools
+import cohere
 from google.genai import types
 from langchain_community.vectorstores import FAISS
 from google.genai.errors import ClientError
@@ -265,10 +267,30 @@ class AgenticRAG(FAISSIndexGeneration, HyperRetrivalAugmentedGeneration):
         )
         return self.vectorstore
     
+    # @tool("hybrid_search","Perform hybrid retrieval by combining sparse keyword search from Elasticsearch with dense semantic retrieval from FAISS, then rerank the merged candidates using Cohere to return the most relevant documents.")
     async def hybrid_search(self, query: str, k: int = 10) -> Optional[List[Document]]:
-        KEYWORDS_K: int = 10
-        SEMANTIC_SEARCH_K: int = 5
+        """
+        Perform hybrid retrieval by combining sparse keyword search from Elasticsearch
+        with dense semantic retrieval from FAISS, then rerank the merged candidates
+        using Cohere to return the most relevant documents.
+        The retrieval flow is:
+        1. Run sparse and dense searches in parallel.
+        2. Fuse both result sets into a single candidate pool.
+        3. Apply reranking to improve final relevance ordering.
+        4. Return the top-k documents.
+        5. Formula for RRF 
+            - RRF_Score = (1 / (60 + Rank_in_Elasticsearch)) + (1 / (60 + Rank_in_FAISS))
 
+        Args:
+            query: User query text.
+            k: Number of final documents to return.
+        Returns:
+            A ranked list of relevant Document objects, or None if no results are found.
+        """
+        KEYWORDS_K = 30
+        SEMANTIC_SEARCH_K = 30
+        RERANK_K = 30   # input to Cohere
+        FINAL_K = 10    # output
         sparse_results: Any = None
         dense_results: Any = None
         async def run_sparse() -> Any:
@@ -290,12 +312,22 @@ class AgenticRAG(FAISSIndexGeneration, HyperRetrivalAugmentedGeneration):
             run_sparse(),
             run_dense()
         )
-        # RRF Deduplication
+        #implementing RRF(Reciprocal Rank Fusion) and then Cohere Reranking for accuracy before inferencing
+        #combining both results 
+                # RRF Deduplication
         combined_scores = {}
         unified_results = {}
         RRF_K = 60
         # Process Sparse
         sparse_hits = sparse_results.get("hits", {}).get("hits", []) if isinstance(sparse_results, dict) else getattr(sparse_results, 'body', {}).get("hits", {}).get("hits", [])
+        #store sparse results in a file
+        with open("sparse_results.json", "w") as f:
+            json.dump(sparse_hits, f, indent=2)
+        #store dense results in a file. We must normalize the object into a JSON-serializable schema
+        with open("dense_results.json", "w") as f:
+            dense_json = [{"page_content": doc.page_content, "metadata": doc.metadata, "score": float(score)} for doc, score in dense_results]
+            json.dump(dense_json, f, indent=2)
+        #calculating RRF scores
         for rank, hit in enumerate(sparse_hits):
             source = hit.get("_source", {})
             chunk_id = source.get("chunk_id")
@@ -329,50 +361,45 @@ class AgenticRAG(FAISSIndexGeneration, HyperRetrivalAugmentedGeneration):
                 }
         # Sort by combined score
         final_results = []
-        for chunk_id, score in sorted(combined_scores.items(), key=lambda item: item[1], reverse=True)[:k]:
+        for chunk_id, score in sorted(combined_scores.items(), key=lambda item: item[1], reverse=True)[:RERANK_K]:
             result = unified_results[chunk_id]
             result["rrf_score"] = score
             final_results.append(result)
         with open("combined_results.json", "w") as f:
             json.dump(final_results, f, indent=2)
-        return final_results
-
-
-    def reranking_documents(self, query: str, documents: List[Dict[str, Any]], top_n: int = 5) -> List[Dict[str, Any]]:
-        #working with COHERE RERANKING API
-        if not documents:
-            return [] 
-        COHERE_API_KEY = os.getenv("COHERE_API_KEY")
-        if not COHERE_API_KEY:
-            raise ValueError("COHERE_API_KEY environment variable is not set")
-        # We can use the client initialized in __init__ if available, otherwise create a new one
-        client = getattr(self, 'cohere_reranker', None) or cohere.ClientV2(COHERE_API_KEY)
-        # Call the rerank API
-        texts = [doc["text"] for doc in documents]
-        response = client.rerank(
-            model="rerank-v4.0-pro",
+        #implementing reranking with cohere api
+        #extracting only the text from the final_results
+        texts = [doc["text"] for doc in final_results]
+        #rerank-v4.0-pro: Optimized for state-of-the-art quality and complex use-cases
+        #rerank-v4.0-fast: Optimized for low latency and high throughput use-cases
+        results = self.cohere_reranker.rerank(
             query=query,
             documents=texts,
-            top_n=min(top_n, len(texts))
+            top_n=FINAL_K,
+            model="rerank-v4.0-pro",
         )
-        # Map the results back to the original documents using the index
-        reranked_docs = []
-        for item in response.results:
-            doc = documents[item.index]
-            doc["rerank_score"] = item.relevance_score
-            reranked_docs.append(doc)
-            
-        with open("reranked_results.json", "w") as f:
-            json.dump(reranked_docs, f, indent=2)
-        return reranked_docs
+        #update the final results with the reranked results
+        reranked_results = []
+        for result in results.results:
+            doc = final_results[result.index]
+            doc["rerank_score"] = result.relevance_score
+            reranked_results.append(doc)
+        with open("final_results.json", "w") as f:
+            json.dump(reranked_results, f, indent=2)
+        return reranked_results
+    
+    def query_decomposition(self, query: str) -> Optional[List[Document]]:
+        """
+        Decompose a complex query into multiple simple queries.
+        Args:
+            query: User query text.
+        Returns:
+            A list of simple queries.
+        """
+        pass
 
 if __name__ == "__main__":
     agentic_rag = AgenticRAG()
-    query="What is SAP S/4HANA?Explain me what is SAP CBC(Central Business Configuration) and how it is different from the traditional SAP S/4HANA configuration?"
+    query="Explain me about the data migration strategies in SAP S/4HANA Cloud Public Edition? and Explain me about differences between SAP S/4HANA Cloud Public Edition and SAP S/4HANA Cloud Private Edition?"
     final_results = asyncio.run(agentic_rag.hybrid_search(query))
-    final_results = agentic_rag.reranking_documents(
-        query=query,
-        documents=final_results,
-        top_n=5
-    )   
     print(final_results)

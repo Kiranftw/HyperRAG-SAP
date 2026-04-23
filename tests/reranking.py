@@ -22,4 +22,4 @@ results = co.rerank(
 for result in results.results:
     print(f"Index: {result.index}")
     print(f"Score: {result.relevance_score}")
-    print(f"Document chunk text: {documents[result.index]['text'][:150]}...\n")
+    print(f"Document chunk text: {documents[result.index]['text'][:1500]}...\n")
