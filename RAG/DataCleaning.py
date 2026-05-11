@@ -23,7 +23,6 @@ logging.basicConfig(
 )
 LOGGER = logging.getLogger()
 
-logging.basicConfig(level=logging.INFO)
 class DataCleaning(object):
     def __init__(self) -> None:
         self.NLP = spacy.load("en_core_web_sm")
