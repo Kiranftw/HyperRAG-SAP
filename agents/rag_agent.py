@@ -1,4 +1,12 @@
 import os
+import sys
+# Allow importing RAG when running directly from the agents/ folder
+parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if parent_dir not in sys.path:
+    sys.path.append(parent_dir)
+rag_dir = os.path.join(parent_dir, "RAG")
+if rag_dir not in sys.path:
+    sys.path.append(rag_dir)
 import json
 import csv
 import docx
@@ -10,7 +18,23 @@ import fitz  # PyMuPDF
 from typing import Dict, List, TypedDict, Literal, Optional, Any
 from pydantic import BaseModel, Field, field_validator
 from RAG.AgenticRAG import AgenticRAG, HyperRetrivalAugmentedGeneration, FAISSIndexGeneration, LOGGER
+from langchain_community.document_loaders import (
+    CSVLoader,
+    JSONLoader,
+    PyPDFLoader,
+    TextLoader,
+)
+from langchain_community.tools.tavily_search import TavilySearchResults
+from langchain_community.vectorstores import FAISS
+from langchain_core.documents import Document
+from langchain_core.embeddings import Embeddings
+from langchain_core.output_parsers import SimpleJsonOutputParser
+from langchain_huggingface import HuggingFaceEmbeddings
+from elasticsearch import Elasticsearch, helpers
+from langchain_ollama import ChatOllama
+from PIL import Image
 import requests
+from bs4 import BeautifulSoup
 from dotenv import find_dotenv, load_dotenv
 from geopy.geocoders import Nominatim
 from langchain_core.messages import HumanMessage, SystemMessage
@@ -18,7 +42,6 @@ from langchain_nvidia_ai_endpoints import ChatNVIDIA
 from langgraph.graph import END, StateGraph
 from langchain_tavily import TavilySearch
 from langchain_community.document_loaders import PyMuPDFLoader, TextLoader, Docx2txtLoader
-
 load_dotenv(find_dotenv())
 
 ALLOWED_FILE_TYPES = {
@@ -30,7 +53,6 @@ ALLOWED_FILE_TYPES = {
     ".jpg",
     ".jpeg",
 }
-
 MAX_FILE_SIZE_MB = 50
 
 class DocumentIngestionRequest(BaseModel):
@@ -42,11 +64,9 @@ class DocumentIngestionRequest(BaseModel):
     enable_ocr: bool = False
     enable_chunking: bool = True
     enable_embedding: bool = True
-
     chunk_size: int = Field(default=1000, ge=100, le=4000)
     chunk_overlap: int = Field(default=200, ge=0, le=1000)
     metadata: Optional[Dict] = {}
-
     @field_validator("filename")
     @classmethod
     def validate_extension(cls, value: str):
@@ -343,8 +363,155 @@ class Tools(AgenticRAG):
                 "status": "error",
                 "message": f"Error saving document: {str(e)}"
             }
+    
+    def process_urls(self, urls: List[str]) -> List[Dict]:
+        """
+        Processes a list of URLs and extracts their content.
+        Uses the Tavily Extract API if TAVILY_API_KEY is available to bypass
+        WAFs, Cloudflare, Akamai blocks, and extract clean, optimized markdown/text.
+        Falls back to a robust local scraper using newspaper3k or BeautifulSoup.
+        Args:
+            urls: List of URLs to process
+        Returns:
+            List of dictionaries containing extracted content
+        """
+        tavily_api_key = os.getenv("TAVILY_API_KEY")
+        if tavily_api_key:
+            try:
+                LOGGER.info("Attempting URL content extraction using Tavily Extract API...")
+                url = "https://api.tavily.com/extract"
+                TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
+                if not TAVILY_API_KEY:
+                    LOGGER.warning("TAVILY_API_KEY not found in environment variables. Skipping Tavily Extract API.")
+                    return []
+                payload = {
+                    "urls": urls,
+                    "extract_depth": "advanced"
+                }
+                headers = {
+                    "Authorization": f"Bearer {TAVILY_API_KEY}",
+                    "Content-Type": "application/json"
+                }
+                response = requests.post(url, json=payload, headers=headers, timeout=20)
+                if response.status_code == 200:
+                    data = response.json()
+                    results = []
+                    # Parse successfully extracted results
+                    for item in data.get("results", []):
+                        results.append({
+                            "status": "success",
+                            "url": item.get("url"),
+                            "title": item.get("title") or "No Title",
+                            "extracted_content": item.get("raw_content") or ""
+                        })
+                    
+                    # Track failed results to retry via local fallback
+                    failed_urls = [item.get("url") for item in data.get("failed_results", []) if item.get("url")]
+                    
+                    # If everything succeeded, return results
+                    if results and not failed_urls:
+                        return results
+                    
+                    # Otherwise, fallback for failed/missing URLs
+                    extracted_urls = {r["url"] for r in results}
+                    urls_to_fallback = [u for u in urls if u not in extracted_urls]
+                    if urls_to_fallback:
+                        LOGGER.warning(f"Tavily Extract failed or skipped {len(urls_to_fallback)} URLs. Using local scraper fallback.")
+                        fallback_results = self._fallback_scraping(urls_to_fallback)
+                        results.extend(fallback_results)
+                    return results
+                else:
+                    LOGGER.warning(f"Tavily Extract API returned status code {response.status_code}: {response.text}")
+            except Exception as e:
+                LOGGER.warning(f"Error during Tavily Extract API call: {e}")
+                
+        LOGGER.info("Using local scraping fallback...")
+        return self._fallback_scraping(urls)
 
-TOOLS = Tools()
+    def _fallback_scraping(self, urls: List[str]) -> List[Dict]:
+        results = []
+        for url in urls:
+            # 1. Try newspaper3k first as it uses heuristic parsing and custom user-agents
+            try:
+                from newspaper import Article
+                LOGGER.info(f"Trying newspaper3k parsing for URL: {url}")
+                article = Article(url)
+                article.download()
+                article.parse()
+                title = article.title
+                text = article.text
+                if text and len(text.strip()) > 100 and "Access Denied" not in title:
+                    results.append({
+                        "status": "success",
+                        "url": url,
+                        "title": title,
+                        "extracted_content": text[:8000]
+                    })
+                    continue
+            except Exception as e:
+                LOGGER.debug(f"newspaper3k failed for {url}: {e}. Falling back to BeautifulSoup.")
+
+            # 2. Fall back to standard BeautifulSoup scraping with robust modern browser headers
+            try:
+                LOGGER.info(f"Locally scraping URL with BeautifulSoup: {url}")
+                headers = {
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+                    "Accept-Language": "en-US,en;q=0.9",
+                    "Accept-Encoding": "gzip, deflate, br",
+                    "Connection": "keep-alive",
+                    "Upgrade-Insecure-Requests": "1",
+                    "Sec-Ch-Ua": '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
+                    "Sec-Ch-Ua-Mobile": "?0",
+                    "Sec-Ch-Ua-Platform": '"Windows"',
+                    "Sec-Fetch-Dest": "document",
+                    "Sec-Fetch-Mode": "navigate",
+                    "Sec-Fetch-Site": "none",
+                    "Sec-Fetch-User": "?1"
+                }
+                response = requests.get(url, headers=headers, timeout=15)
+                
+                if response.status_code in [401, 403]:
+                    results.append({
+                        "status": "error",
+                        "url": url,
+                        "error": f"Access Denied (HTTP {response.status_code}). WAF/Akamai/Cloudflare block detected."
+                    })
+                    continue
+                    
+                soup = BeautifulSoup(response.text, "html.parser")
+                title = soup.title.string.strip() if soup.title and soup.title.string else "No Title"
+                
+                if "Access Denied" in title or "Attention Required" in title or "Cloudflare" in title:
+                    results.append({
+                        "status": "error",
+                        "url": url,
+                        "error": "WAF / Cloudflare block page detected in title."
+                    })
+                    continue
+                for script in soup(["script", "style", "nav", "footer", "header", "noscript", "aside"]):
+                    script.decompose()
+                
+                clean_text = soup.get_text(separator="\n").strip()
+                clean_text = "\n".join([line.strip() for line in clean_text.splitlines() if line.strip()])
+                results.append({
+                    "status": "success",
+                    "url": url,
+                    "title": title,
+                    "extracted_content": clean_text[:8000]
+                })
+            except Exception as e:
+                LOGGER.error(f"Error locally scraping {url}: {e}")
+                results.append({
+                    "status": "error",
+                    "url": url,
+                    "error": str(e)
+                })
+        return results   
+
+if __name__ == "__main__":
+    tools = Tools()
+    print(tools.process_urls(["https://www.sap.com/resources/what-are-ai-agents"])) 
 
 class AgentState(TypedDict):
     messages: List[Dict]

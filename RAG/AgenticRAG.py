@@ -29,7 +29,7 @@ from elasticsearch import Elasticsearch, helpers
 from langchain_ollama import ChatOllama
 from PIL import Image
 
-from faiss_index import (
+from index_generation import (
     LOGGER,
     ExceptionHandelling,
     FAISSIndexGeneration,
