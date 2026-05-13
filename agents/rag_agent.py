@@ -121,6 +121,11 @@ class SaveDocumentRequest(BaseModel):
     filename: str = Field(..., description="The name of the file to save, e.g., 'report.json' or 'guide.txt'")
     data: Any = Field(..., description="The content/data to save (raw string, list, or JSON dictionary)")
 
+class HybridRetrivalAugumentedGeneration(BaseModel):
+    query:str
+    
+
+
 MODEL = ChatNVIDIA(
     model="moonshotai/kimi-k2-instruct",
     api_key=os.getenv("NVIDIA_API_KEY"),
@@ -364,7 +369,8 @@ class Tools(AgenticRAG):
                 "message": f"Error saving document: {str(e)}"
             }
     
-    def process_urls(self, urls: List[str]) -> List[Dict]:
+    @staticmethod
+    def process_urls(urls: List[str]) -> List[Dict]:
         """
         Processes a list of URLs and extracts their content.
         Uses the Tavily Extract API if TAVILY_API_KEY is available to bypass
@@ -404,14 +410,11 @@ class Tools(AgenticRAG):
                             "title": item.get("title") or "No Title",
                             "extracted_content": item.get("raw_content") or ""
                         })
-                    
                     # Track failed results to retry via local fallback
                     failed_urls = [item.get("url") for item in data.get("failed_results", []) if item.get("url")]
-                    
                     # If everything succeeded, return results
                     if results and not failed_urls:
-                        return results
-                    
+                        return results 
                     # Otherwise, fallback for failed/missing URLs
                     extracted_urls = {r["url"] for r in results}
                     urls_to_fallback = [u for u in urls if u not in extracted_urls]
@@ -481,7 +484,6 @@ class Tools(AgenticRAG):
                     
                 soup = BeautifulSoup(response.text, "html.parser")
                 title = soup.title.string.strip() if soup.title and soup.title.string else "No Title"
-                
                 if "Access Denied" in title or "Attention Required" in title or "Cloudflare" in title:
                     results.append({
                         "status": "error",
@@ -491,7 +493,6 @@ class Tools(AgenticRAG):
                     continue
                 for script in soup(["script", "style", "nav", "footer", "header", "noscript", "aside"]):
                     script.decompose()
-                
                 clean_text = soup.get_text(separator="\n").strip()
                 clean_text = "\n".join([line.strip() for line in clean_text.splitlines() if line.strip()])
                 results.append({
@@ -508,6 +509,9 @@ class Tools(AgenticRAG):
                     "error": str(e)
                 })
         return results   
+    
+    def list_documents():
+        pass 
 
 if __name__ == "__main__":
     tools = Tools()
