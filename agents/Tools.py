@@ -121,11 +121,6 @@ class SaveDocumentRequest(BaseModel):
     filename: str = Field(..., description="The name of the file to save, e.g., 'report.json' or 'guide.txt'")
     data: Any = Field(..., description="The content/data to save (raw string, list, or JSON dictionary)")
 
-class HybridRetrivalAugumentedGeneration(BaseModel):
-    query:str
-    
-
-
 MODEL = ChatNVIDIA(
     model="moonshotai/kimi-k2-instruct",
     api_key=os.getenv("NVIDIA_API_KEY"),
@@ -139,17 +134,6 @@ class Tools(AgenticRAG):
         super().__init__()
         
     def search_internet(self, request: SearchInternet) -> Dict:
-        """
-        Search the web for real-time information on a given topic.
-        Use this tool when:
-        - up-to-date information is needed
-        - the answer requires internet search
-        - the user asks about recent events or external knowledge
-        Args:
-            request (SearchInternet): The Pydantic request object.
-        Returns:
-            Dict containing search results with relevant web information.
-        """
         query = request.query
         docunments_count = request.documents_count
         SEARCH_ENGINE = TavilySearch(
@@ -189,17 +173,6 @@ class Tools(AgenticRAG):
             }
     
     def query_decomposition(self, request: QueryDecomposition) -> List[str]:
-        """
-        Decompose a complex, multi-intent user query into multiple independent sub-queries.
-        This method uses a Generative LLM to analyze the input query and break it down into
-        atomic, modular questions. It enforces specific constraints such as expanding vague
-        acronyms or pronouns into full domain names (e.g., "SAP S/4HANA Cloud Public Edition")
-        to maximize exact-match keyword hits in the sparse BM25 retrieval stage.
-        Args:
-            request (QueryDecomposition): The request containing query and count.
-        Returns:
-            List[str]: A list of optimized, contextually independent sub-queries.
-        """
         # Load decomposition prompt
         with open(
             os.path.join(self.ROOT, "prompts", "query_decomposition.txt"), "r"
@@ -242,14 +215,6 @@ class Tools(AgenticRAG):
             return [request.query]
     
     def save_documents(self, request: SaveDocumentRequest) -> Dict:
-        """
-        Save text content, JSON data, PDF, Word, CSV, or Excel files into a file with a given filename under the 'uploaded_documents' directory.
-        Use this tool when you need to persist search results, reports, guides, spreadsheets, or any generated data to a file.
-        Args:
-            request (SaveDocumentRequest): The request containing the filename and content data.
-        Returns:
-            Dict containing the file path of the saved document or error status.
-        """
         try:
             folder = "datasets"
             if not os.path.exists(folder):
@@ -332,7 +297,6 @@ class Tools(AgenticRAG):
                             df = pd.DataFrame({"Content": [str(data)]})
                     except Exception:
                         df = pd.DataFrame({"Content": [str(data)]})
-                
                 df.to_excel(filepath, index=False)
             elif ext == ".csv":
                 # Save as CSV file
@@ -371,16 +335,6 @@ class Tools(AgenticRAG):
     
     @staticmethod
     def process_urls(urls: List[str]) -> List[Dict]:
-        """
-        Processes a list of URLs and extracts their content.
-        Uses the Tavily Extract API if TAVILY_API_KEY is available to bypass
-        WAFs, Cloudflare, Akamai blocks, and extract clean, optimized markdown/text.
-        Falls back to a robust local scraper using newspaper3k or BeautifulSoup.
-        Args:
-            urls: List of URLs to process
-        Returns:
-            List of dictionaries containing extracted content
-        """
         tavily_api_key = os.getenv("TAVILY_API_KEY")
         if tavily_api_key:
             try:
@@ -453,7 +407,6 @@ class Tools(AgenticRAG):
                     continue
             except Exception as e:
                 LOGGER.debug(f"newspaper3k failed for {url}: {e}. Falling back to BeautifulSoup.")
-
             # 2. Fall back to standard BeautifulSoup scraping with robust modern browser headers
             try:
                 LOGGER.info(f"Locally scraping URL with BeautifulSoup: {url}")
@@ -473,7 +426,6 @@ class Tools(AgenticRAG):
                     "Sec-Fetch-User": "?1"
                 }
                 response = requests.get(url, headers=headers, timeout=15)
-                
                 if response.status_code in [401, 403]:
                     results.append({
                         "status": "error",
@@ -481,7 +433,6 @@ class Tools(AgenticRAG):
                         "error": f"Access Denied (HTTP {response.status_code}). WAF/Akamai/Cloudflare block detected."
                     })
                     continue
-                    
                 soup = BeautifulSoup(response.text, "html.parser")
                 title = soup.title.string.strip() if soup.title and soup.title.string else "No Title"
                 if "Access Denied" in title or "Attention Required" in title or "Cloudflare" in title:
@@ -512,28 +463,11 @@ class Tools(AgenticRAG):
     
     def list_documents():
         pass 
+    
+    def generate_manifest_from_files(file_paths: list[str], output_path: str) -> dict:
+        
 
 if __name__ == "__main__":
     tools = Tools()
     print(tools.process_urls(["https://www.sap.com/resources/what-are-ai-agents"])) 
 
-class AgentState(TypedDict):
-    messages: List[Dict]
-    user_input: str
-    goal: str
-    plan: List[str]
-    current_action: str
-    next_action: str
-    tool_result: Dict
-    tools_used: List[Dict]
-    working_memory: Dict
-    long_term_memory: Dict
-    observations: List[Dict]
-    last_error: str
-    retry_count: int
-    confidence: float
-    status: str
-    final_response: str
-    source: Dict
-    document_ids: List[str]
-    ingestion_job_id: str

@@ -3,7 +3,6 @@ import logging
 import os
 from pickletools import dis
 from typing import Dict, List, Optional
-
 import pandas as pd
 from langchain.agents import create_agent
 from pydantic import BaseModel
@@ -17,7 +16,6 @@ logging.basicConfig(
     handlers=[logging.FileHandler("app.log"), logging.StreamHandler()],
 )
 LOGGER = logging.getLogger()
-
 
 class OrgRow(BaseModel):
     company: str
@@ -34,14 +32,33 @@ class OrgRow(BaseModel):
     assignment_type: Optional[str] = None  # important: relation/connection type
     parent_code: Optional[str] = None  # important: dependency link
 
-
 class PlanStep(BaseModel):
     action: str
     entity_type: str
     parent_key: Optional[str] = None
     payload: Dict
 
-
 class OrgPlan(BaseModel):
     rows: List[OrgRow]
     steps: List[PlanStep]
+
+class AgentState(TypedDict):
+    messages: List[Dict]
+    user_input: str
+    goal: str
+    plan: List[str]
+    current_action: str
+    next_action: str
+    tool_result: Dict
+    tools_used: List[Dict]
+    working_memory: Dict
+    long_term_memory: Dict
+    observations: List[Dict]
+    last_error: str
+    retry_count: int
+    confidence: float
+    status: str
+    final_response: str
+    source: Dict
+    document_ids: List[str]
+    ingestion_job_id: str

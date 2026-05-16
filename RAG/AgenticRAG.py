@@ -35,7 +35,6 @@ from index_generation import (
     FAISSIndexGeneration,
     HyperRetrivalAugmentedGeneration,
 )
-
 pytesseract.pytesseract.tesseract_cmd = r"/usr/bin/tesseract"
 import os
 import warnings
