@@ -87,36 +87,12 @@ class DocumentIngestionRequest(BaseModel):
 
 class SearchInternet(BaseModel):
     query: str = Field(..., description="search query")
-    @field_validator("query")
-    @classmethod
-    def validate_query(cls, value: str):
-        if not value:
-            raise ValueError("Query cannot be empty")
-        return value
     documents_count: int = Field(..., description="number of document to retrieve")
-    @field_validator("documents_count")
-    @classmethod
-    def validate_documents_count(cls, value: int):
-        if value <= 0:
-            raise ValueError("number of documents must be > 0")
-        return value
     
 class QueryDecomposition(BaseModel):
     query: str = Field(..., description="search query")
     queries_count: int = Field(..., description="Number of queries to decompose")
-    @field_validator("query")
-    @classmethod
-    def validate_query(cls, value: str):
-        if not value:
-            raise ValueError("Query cannot be empty")
-        return value
-    @field_validator("queries_count")
-    @classmethod
-    def validate_queries_count(cls, value: int):
-        if value <= 0:
-            raise ValueError("Number of queries must be greater than 0")
-        return value
-
+    
 class SaveDocumentRequest(BaseModel):
     filename: str = Field(..., description="The name of the file to save, e.g., 'report.json' or 'guide.txt'")
     data: Any = Field(..., description="The content/data to save (raw string, list, or JSON dictionary)")
@@ -463,9 +439,7 @@ class Tools(AgenticRAG):
     
     def list_documents():
         pass 
-    
-    def generate_manifest_from_files(file_paths: list[str], output_path: str) -> dict:
-        
+
 
 if __name__ == "__main__":
     tools = Tools()
