@@ -17,7 +17,7 @@ import pytesseract
 import fitz  # PyMuPDF
 from typing import Dict, List, TypedDict, Literal, Optional, Any
 from pydantic import BaseModel, Field, field_validator
-from RAG.AgenticRAG import AgenticRAG, HyperRetrivalAugmentedGeneration, FAISSIndexGeneration, LOGGER
+from RAG.agentic_rag import AgenticRAG, HyperRetrivalAugmentedGeneration, FAISSIndexGeneration, LOGGER
 from langchain_community.document_loaders import (
     CSVLoader,
     JSONLoader,
@@ -88,11 +88,11 @@ class DocumentIngestionRequest(BaseModel):
 class SearchInternet(BaseModel):
     query: str = Field(..., description="search query")
     documents_count: int = Field(..., description="number of document to retrieve")
-    
+
 class QueryDecomposition(BaseModel):
     query: str = Field(..., description="search query")
     queries_count: int = Field(..., description="Number of queries to decompose")
-    
+
 class SaveDocumentRequest(BaseModel):
     filename: str = Field(..., description="The name of the file to save, e.g., 'report.json' or 'guide.txt'")
     data: Any = Field(..., description="The content/data to save (raw string, list, or JSON dictionary)")
@@ -105,10 +105,10 @@ MODEL = ChatNVIDIA(
     max_completion_tokens=16384,
 )
 
-class Tools(AgenticRAG):
+class ToolManager(AgenticRAG):
     def __init__(self):
         super().__init__()
-        
+
     def search_internet(self, request: SearchInternet) -> Dict:
         query = request.query
         docunments_count = request.documents_count
@@ -147,7 +147,7 @@ class Tools(AgenticRAG):
             return {
                 "error": str(e)
             }
-    
+
     def query_decomposition(self, request: QueryDecomposition) -> List[str]:
         # Load decomposition prompt
         with open(
@@ -189,7 +189,7 @@ class Tools(AgenticRAG):
         except Exception as e:
             print(f"Error during query decomposition: {e}")
             return [request.query]
-    
+
     def save_documents(self, request: SaveDocumentRequest) -> Dict:
         try:
             folder = "datasets"
@@ -206,7 +206,7 @@ class Tools(AgenticRAG):
                 else:
                     ext = ".txt"
                     filepath += ".txt"
-            
+
             if ext == ".json":
                 with open(filepath, "w", encoding="utf-8") as f:
                     # Support saving both serializable structures and JSON strings
@@ -219,7 +219,7 @@ class Tools(AgenticRAG):
                         except Exception:
                             # Write raw string if parse fails
                             f.write(str(request.data))
-                            
+
             elif ext == ".pdf":
                 doc = fitz.open()
                 text_content = str(request.data)
@@ -229,7 +229,7 @@ class Tools(AgenticRAG):
                 margin_top = 50
                 line_height = 15
                 page_height = page.rect.height
-                
+
                 y = margin_top
                 for line in lines:
                     if y + line_height > page_height - 50:
@@ -237,7 +237,7 @@ class Tools(AgenticRAG):
                         y = margin_top
                     page.insert_text((margin_left, y), line, fontsize=10)
                     y += line_height
-                    
+
                 doc.save(filepath)
                 doc.close()
             elif ext == ".docx":
@@ -250,7 +250,7 @@ class Tools(AgenticRAG):
                     else:
                         doc.add_paragraph("")
                 doc.save(filepath)
-                
+
             elif ext in [".xlsx", ".xls"]:
                 data = request.data
                 if isinstance(data, list):
@@ -290,7 +290,7 @@ class Tools(AgenticRAG):
                 else:
                     # Raw string or fallback format
                     with open(filepath, "w", encoding="utf-8") as f:
-                        f.write(str(data))           
+                        f.write(str(data))
             else:
                 # Default fallback (txt, md, log, etc.)
                 with open(filepath, "w", encoding="utf-8") as f:
@@ -308,7 +308,7 @@ class Tools(AgenticRAG):
                 "status": "error",
                 "message": f"Error saving document: {str(e)}"
             }
-    
+
     @staticmethod
     def process_urls(urls: List[str]) -> List[Dict]:
         tavily_api_key = os.getenv("TAVILY_API_KEY")
@@ -344,7 +344,7 @@ class Tools(AgenticRAG):
                     failed_urls = [item.get("url") for item in data.get("failed_results", []) if item.get("url")]
                     # If everything succeeded, return results
                     if results and not failed_urls:
-                        return results 
+                        return results
                     # Otherwise, fallback for failed/missing URLs
                     extracted_urls = {r["url"] for r in results}
                     urls_to_fallback = [u for u in urls if u not in extracted_urls]
@@ -357,7 +357,7 @@ class Tools(AgenticRAG):
                     LOGGER.warning(f"Tavily Extract API returned status code {response.status_code}: {response.text}")
             except Exception as e:
                 LOGGER.warning(f"Error during Tavily Extract API call: {e}")
-                
+
         LOGGER.info("Using local scraping fallback...")
         return self._fallback_scraping(urls)
 
@@ -435,13 +435,12 @@ class Tools(AgenticRAG):
                     "url": url,
                     "error": str(e)
                 })
-        return results   
-    
+        return results
+
     def list_documents():
-        pass 
+        pass
 
 
 if __name__ == "__main__":
-    tools = Tools()
-    print(tools.process_urls(["https://www.sap.com/resources/what-are-ai-agents"])) 
-
+    tools = ToolManager()
+    print(tools.process_urls(["https://www.sap.com/resources/what-are-ai-agents"]))

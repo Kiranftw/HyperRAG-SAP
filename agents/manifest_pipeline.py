@@ -27,7 +27,7 @@ class ManifestOutput(BaseModel):
     total_tools: int
     tools: list[ToolManifest]
     skipped_files: list[str] = Field(default_factory=list)
-    errors: list[dict] = Field(default_factory=list)
+    errors: list[dict] = Field(default_fakctory=list)
 
 def get_annotation(annotation_node) -> str:
     if annotation_node is None:
