@@ -115,6 +115,7 @@ class AgentTools(AgenticRAG):
         super().__init__()
 
     def search_internet(self, request: SearchInternet) -> Dict:
+        """Search the internet for SAP documentation or general information using Tavily."""
         query = request.query
         docunments_count = request.documents_count
         SEARCH_ENGINE = TavilySearch(
@@ -154,6 +155,7 @@ class AgentTools(AgenticRAG):
             }
 
     def query_decomposition(self, request: QueryDecomposition) -> List[str]:
+        """Decompose a complex query into simpler sub-queries for better retrieval."""
         # Load decomposition prompt
         with open(
             os.path.join(self.ROOT, "prompts", "query_decomposition.txt"), "r"
@@ -196,6 +198,7 @@ class AgentTools(AgenticRAG):
             return [request.query]
 
     def write_file(self, request: SaveDocumentRequest) -> Dict:
+        """Save extracted data, lists, or text to a local file (supports JSON, PDF, DOCX, XLSX, CSV, TXT)."""
         try:
             folder = "datasets"
             if not os.path.exists(folder):
@@ -316,6 +319,7 @@ class AgentTools(AgenticRAG):
 
     @staticmethod
     def process_urls(urls: List[str]) -> List[Dict]:
+        """Scrape and extract clean text content from a list of web URLs."""
         tavily_api_key = os.getenv("TAVILY_API_KEY")
         if tavily_api_key:
             try:
@@ -445,6 +449,7 @@ class AgentTools(AgenticRAG):
     # Reading Files from the Local System
     @ExceptionHandelling
     def read_file(self, filepath: str) -> str:
+        """Read text contents of a local file (Supports PDF, TXT, DOCX, and Image OCR)."""
         if not filepath:
             LOGGER.error("NO FILEPATH IS AVAILABLE!")
             return ""
@@ -503,7 +508,8 @@ class AgentTools(AgenticRAG):
     @ExceptionHandelling
     # scanning the file using ocr for the pdf, txt, docx, png, jpg, jpeg, tiff, bmp, gif files 
     # and returns the list of tuples of (page_name, image)
-    def scan_file(self, filepath):
+    def scan_file(self, filepath: str) -> list:
+        """Scan a file (PDF or image) to extract raw pages and images for vision processing."""
         if not os.path.exists(filepath):
             LOGGER.error(f"ERROR FILE NOT FOUND: {filepath}")
             return []
@@ -536,7 +542,8 @@ class AgentTools(AgenticRAG):
         #[('Page 1', <PIL.Image.Image image mode=L size=2480x3509 at 0x7FB7F4F751E0>)]
         return targets
     
-    def create_directory(self,directory_name:str):
+    def create_directory(self, directory_name: str) -> str:
+        """Create a new directory on the local filesystem."""
         try:
             if os.path.exists(directory_name):
                 LOGGER.info(f"Directory already exists: {directory_name}")
@@ -548,7 +555,8 @@ class AgentTools(AgenticRAG):
             LOGGER.error(f"Failed to create directory: {str(e)}")
             return f"Error creating directory: {str(e)}"
 
-    def move_file(self,filename:str,directory_name:str):
+    def move_file(self, filename: str, directory_name: str) -> str:
+        """Move a file to a new directory on the local filesystem."""
         try:
             if not os.path.exists(filename):
                 return f"File does not exist: {filename}"
@@ -565,7 +573,8 @@ class AgentTools(AgenticRAG):
             LOGGER.error(f"Failed to move file: {str(e)}")
             return f"Error moving file: {str(e)}"
 
-    def delete_file(self,filename:str):
+    def delete_file(self, filename: str) -> str:
+        """Delete a file from the local filesystem."""
         try:
             filesize = os.path.getsize(filename)
             if not os.path.exists(filename):
