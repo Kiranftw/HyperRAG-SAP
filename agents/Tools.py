@@ -17,12 +17,17 @@ import pytesseract
 import fitz  # PyMuPDF
 from typing import Dict, List, TypedDict, Literal, Optional, Any
 from pydantic import BaseModel, Field, field_validator
-from RAG.agentic_rag import AgenticRAG, HyperRetrivalAugmentedGeneration, FAISSIndexGeneration, LOGGER
+from RAG.agentic_rag import AgenticRAG, HyperRetrivalAugmentedGeneration, FAISSIndexGeneration, LOGGER, ExceptionHandelling
 from langchain_community.document_loaders import (
     CSVLoader,
     JSONLoader,
     PyPDFLoader,
     TextLoader,
+    Docx2txtLoader,
+    DirectoryLoader,
+    UnstructuredWordDocumentLoader,
+    UnstructuredMarkdownLoader,
+    UnstructuredHTMLLoader
 )
 from langchain_community.tools.tavily_search import TavilySearchResults
 from langchain_community.vectorstores import FAISS
@@ -105,7 +110,7 @@ MODEL = ChatNVIDIA(
     max_completion_tokens=16384,
 )
 
-class ToolManager(AgenticRAG):
+class AgentTools(AgenticRAG):
     def __init__(self):
         super().__init__()
 
@@ -190,7 +195,7 @@ class ToolManager(AgenticRAG):
             print(f"Error during query decomposition: {e}")
             return [request.query]
 
-    def save_documents(self, request: SaveDocumentRequest) -> Dict:
+    def write_file(self, request: SaveDocumentRequest) -> Dict:
         try:
             folder = "datasets"
             if not os.path.exists(folder):
@@ -437,10 +442,141 @@ class ToolManager(AgenticRAG):
                 })
         return results
 
-    def list_documents():
-        pass
+    # Reading Files from the Local System
+    @ExceptionHandelling
+    def read_file(self, filepath: str) -> str:
+        if not filepath:
+            LOGGER.error("NO FILEPATH IS AVAILABLE!")
+            return ""
+        if not os.path.exists(filepath):
+            LOGGER.error(f"FILE NOT FOUND: {filepath}")
+            return ""
+        
+        extracted_data = ""
+        filename: str = os.path.basename(filepath)
 
+        if filename.lower().endswith('.pdf'):
+            loader: PyMuPDFLoader = PyMuPDFLoader(filepath)
+            documents = loader.load()
+            extracted_data = '\n'.join(doc.page_content for doc in documents)
+            # If no PDF), use OCR with PyMuPDF
+            if len(extracted_data.strip()) < 50:
+                LOGGER.info("NO TEXT EXTRAC-TED FROM PDF, USING OCR...(SCANNED PDF)")
+                doc = fitz.open(filepath)
+                ocr_texts = []
+                for page_num in range(len(doc)):
+                    page = doc[page_num]
+                    # Convert page to image at 300 DPI
+                    pix = page.get_pixmap(matrix=fitz.Matrix(300/72, 300/72))
+                    img = Image.frombytes("RGB", (pix.width, pix.height), pix.samples)
+                    # OCR the image
+                    text = pytesseract.image_to_string(img, lang='eng')
+                    ocr_texts.append(text)
+                    LOGGER.info(f"OCR page {page_num + 1}: EXTRACTED {len(text)} CHARACTERS")
+                doc.close()
+                extracted_data = '\n\n'.join(ocr_texts)
+                LOGGER.info(f"TOTAL OCR CHARACTERS: {len(extracted_data)} CHARACTERS")
+            return extracted_data
+    
+        elif filename.lower().endswith('.txt'):
+            loader: TextLoader = TextLoader(filepath)
+            documents = loader.load()
+            extracted_data = '\n'.join(doc.page_content for doc in documents)
+            return extracted_data
+
+        elif filename.lower().endswith('.docx'):
+            loader: Docx2txtLoader = Docx2txtLoader(filepath)
+            documents = loader.load()
+            extracted_data = '\n'.join(doc.page_content for doc in documents)
+            return extracted_data
+        
+        elif filename.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif')):
+            image = Image.open(filepath)
+            extracted_data = pytesseract.image_to_string(image)
+            extracted_data = extracted_data.strip()
+            LOGGER.info(f"IMAGE OCR: EXTRACTED {len(extracted_data)} CHARACTERS")
+            return extracted_data
+        else:
+            LOGGER.error("UNSUPPORTED FILE TYPE!")
+            return ""
+
+    @ExceptionHandelling
+    # scanning the file using ocr for the pdf, txt, docx, png, jpg, jpeg, tiff, bmp, gif files 
+    # and returns the list of tuples of (page_name, image)
+    def scan_file(self, filepath):
+        if not os.path.exists(filepath):
+            LOGGER.error(f"ERROR FILE NOT FOUND: {filepath}")
+            return []
+        extinction = os.path.splitext(filepath)[1].lower()
+        targets = []
+        if extinction == '.pdf':
+            LOGGER.info(f"PROCESSING PDF: {filepath}")
+            import fitz  # PyMuPDF
+            doc = fitz.open(filepath)
+            for i, page in enumerate(doc):
+                pix = page.get_pixmap(dpi=300)
+                mode = "RGB" if pix.alpha == 0 else "RGBA"
+                img = Image.frombytes(mode, [pix.width, pix.height], pix.samples)
+                img = img.convert('L')
+                targets.append((f"Page {i+1}", img))
+            doc.close()
+            LOGGER.info(f"PDF PROCESSED SUCCESSFULLY: {filepath}")
+        elif extinction in ['.png', '.jpg', '.jpeg']:
+            LOGGER.info(f"PROCESSING IMAGE: {filepath}")
+            try:
+                img = Image.open(filepath).convert('L')
+                targets.append(("Image", img))
+                LOGGER.info(f"IMAGE PROCESSED SUCCESSFULLY: {filepath}")
+            except Exception as e:
+                LOGGER.error(f"ERROR PROCESSING IMAGE {filepath}: {e}")
+                return []
+        else:
+            LOGGER.error(f"UNSUPPORTED FILE TYPE: {filepath}")
+            return []
+        #[('Page 1', <PIL.Image.Image image mode=L size=2480x3509 at 0x7FB7F4F751E0>)]
+        return targets
+    
+    def create_directory(self,directory_name:str):
+        try:
+            if os.path.exists(directory_name):
+                LOGGER.info(f"Directory already exists: {directory_name}")
+                return f"Directory already exists: {directory_name}"
+            os.makedirs(directory_name)
+            LOGGER.info(f"Directory created: {directory_name}")
+            return f"Directory created successfully: {directory_name}"
+        except Exception as e:
+            LOGGER.error(f"Failed to create directory: {str(e)}")
+            return f"Error creating directory: {str(e)}"
+
+    def move_file(self,filename:str,directory_name:str):
+        try:
+            if not os.path.exists(filename):
+                return f"File does not exist: {filename}"
+            if not os.path.exists(directory_name):
+                return f"Directory does not exist: {directory_name}"
+            destination=os.path.join(
+                directory_name,
+                os.path.basename(filename)
+            )
+            shutil.move(filename,destination)
+            LOGGER.info(f"Moved file {filename} -> {destination}")
+            return f"File moved successfully to: {destination}"
+        except Exception as e:
+            LOGGER.error(f"Failed to move file: {str(e)}")
+            return f"Error moving file: {str(e)}"
+
+    def delete_file(self,filename:str):
+        try:
+            filesize = os.path.getsize(filename)
+            if not os.path.exists(filename):
+                return f"File does not exist: {filename}"
+            os.remove(filename)
+            LOGGER.info(f"Deleted file: {filename} with size {filesize}MB")
+            return f"File deleted successfully: {filename} with size {filesize}MB"
+        except Exception as e:
+            LOGGER.error(f"Failed to delete file: {str(e)}")
+            return f"Error deleting file: {str(e)}"
 
 if __name__ == "__main__":
-    tools = ToolManager()
+    tools = AgentTools()
     print(tools.process_urls(["https://www.sap.com/resources/what-are-ai-agents"]))

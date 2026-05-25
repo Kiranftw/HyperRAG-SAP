@@ -1,160 +1,137 @@
-from __future__ import annotations
 from dataclasses import dataclass, field
-from datetime import datetime
-from enum import Enum
-from typing import Any, Dict, List, Optional
-from pydantic import BaseModel, Field
-from Tools import ToolManager
-from RAG.agentic_rag import AgenticRAG
-
-class TaskStatus(str, Enum):
-    PENDING = "pending"
-    RUNNING = "running"
-    COMPLETED = "completed"
-    FAILED = "failed"
-    RETRYING = "retrying"
-
-class TaskType(str, Enum):
-    MANAGER = "manager"
-    SUB_MANAGER = "sub_manager"
-    WORKER = "worker"
-
-    RESEARCH = "research"
-    PLANNING = "planning"
-    VALIDATION = "validation"
-
-    COMPANY = "company"
-    COMPANY_CODE = "company_code"
-    SALES_ORG = "sales_org"
-    PLANT = "plant"
-    STORAGE_LOCATION = "storage_location"
-    SHIPPING_POINT = "shipping_point"
-    WAREHOUSE = "warehouse"
-
-    CONFIGURATION = "configuration"
-    TOOL_EXECUTION = "tool_execution"
-
-    SYNTHESIS = "synthesis"
-
-class EntityType(str, Enum):
-    COMPANY = "company"
-    COMPANY_CODE = "company_code"
-    SALES_ORG = "sales_org"
-    PLANT = "plant"
-    STORAGE_LOCATION = "storage_location"
-    SHIPPING_POINT = "shipping_point"
-    WAREHOUSE = "warehouse"
-
-class ToolSpec(BaseModel):
-    tool_name: str
-    description: str
-    server_name: Optional[str] = None
-    input_schema: Dict[str, Any] = Field(default_factory=dict)
-    output_schema: Dict[str, Any] = Field(default_factory=dict)
-    enabled: bool = True
-    tags: List[str] = Field(default_factory=list)
-
-class MCPManifest(BaseModel):
-    server_name: str
-    server_type: str
-    tools: List[ToolSpec] = Field(default_factory=list)
-    version: Optional[str] = None
-    metadata: Dict[str, Any] = Field(default_factory=dict)
-
-
-class SubTask(BaseModel):
-    task_id: str
-    task_type: TaskType
-    objective: str
-    assigned_agent: Optional[str] = None
-    depends_on: List[str] = Field(default_factory=list)
-    priority: int = 5
-    metadata: Dict[str, Any] = Field(default_factory=dict)
-    input_payload: Dict[str, Any] = Field(default_factory=dict)
-    expected_output: Optional[str] = None
-    status: TaskStatus = TaskStatus.PENDING
-
-class AgentResult(BaseModel):
-    task_id: str
-    agent_name: str
-    status: TaskStatus
-    output: Any
-    confidence: float = 0.0
-    metadata: Dict[str, Any] = Field(default_factory=dict)
-    error: Optional[str] = None
-    execution_time: Optional[float] = None
-    token_usage: Optional[int] = None
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-
+from typing import Dict, List, Optional, Any
+import requests
+import os
+from dotenv import load_dotenv, find_dotenv
+load_dotenv(find_dotenv())
+from langchain_nvidia_ai_endpoints import ChatNVIDIA
+from langchai
 
 @dataclass
-class RunState:    # CORE
-    run_id: str
+class RunState:
     user_goal: str
-    original_input: Any = None
-    parsed_input: List[ExcelRow] = field(default_factory=list)
-    # TASKS
-    subtasks: List[SubTask] = field(default_factory=list)
-    completed_tasks: List[str] = field(default_factory=list)
-    failed_tasks: List[str] = field(default_factory=list)
-    active_tasks: List[str] = field(default_factory=list)
-    # RESULTS
-    results: Dict[str, AgentResult] = field(default_factory=dict)
-    # ORG STRUCTURE
-    org_blueprint: Dict[str, EntityNode] = field(default_factory=dict)
-    dependency_graph: Dict[str, List[str]] = field(default_factory=dict)
-    entity_registry: Dict[str, EntityNode] = field(default_factory=dict)
-    validated_entities: List[str] = field(default_factory=list)
-    # TOOLING
-    available_tools: Dict[str, ToolSpec] = field(default_factory=dict)
-    tool_cache: Dict[str, Any] = field(default_factory=dict)
-    tool_failures: List[str] = field(default_factory=list)
-    active_mcp_servers: List[str] = field(default_factory=list)
-    # MEMORY
-    notes: List[str] = field(default_factory=list)
-    artifacts: Dict[str, Any] = field(default_factory=dict)
-    retrieved_documents: List[RetrievedDocument] = field(default_factory=list)
-    # EXECUTION
-    execution_plan: Optional[ExecutionPlan] = None
-    execution_context: ExecutionContext = field(
-        default_factory=ExecutionContext
-    )
-    execution_status: str = "running"
-    retry_count: int = 0
-    # VALIDATION
-    validation_errors: List[ValidationErrorModel] = field(
-        default_factory=list
-    )
-    warnings: List[str] = field(default_factory=list)
-    # METRICS
-    total_tokens_used: int = 0
-    total_execution_time: float = 0.0
-    created_at: datetime = field(default_factory=datetime.utcnow)
+    subtasks: List[dict] = field(default_factory=list)
+    results: Dict[str, str] = field(default_factory=dict)
+    status: str = "running"
+@dataclass
+class RunState:
+    user_goal: str
+    subtasks: List[dict] = field(default_factory=list)
+    
+@dataclass
+class GenerationConfig:
+    temperature: float = 0.2
+    max_tokens: int = 2048
+    top_p: float = 0.9
+    frequency_penalty: float = 0.0
+    presence_penalty: float = 0.0
+    stop: Optional[List[str]] = None
+    stream: bool = False
+    thinking_mode: bool = False
+    extra_body: Optional[Dict[str, Any]] = None
+
+class NvidiaLLM:
+    def __init__(
+        self,
+        model_name="bytedance/seed-oss-36b-instruct",
+        default_config: Optional[GenerationConfig] = None
+    ):
+        self.model_name = model_name
+        self.api_key = os.getenv("SEED_OSS_MODEL")
+        self.default_config = default_config or GenerationConfig()
+        self.llm = ChatNVIDIA(
+            model=model_name,
+            api_key=self.api_key
+        )
+    def generate(
+        self,
+        prompt: str,
+        config: Optional[GenerationConfig] = None
+    ):
+        cfg = config or self.default_config
+        invoke_params = {
+            "temperature": cfg.temperature,
+            "max_tokens": cfg.max_tokens,
+            "top_p": cfg.top_p,
+        }
+        # Optional params
+        if cfg.stop:
+            invoke_params["stop"] = cfg.stop
+        if cfg.extra_body:
+            invoke_params.update(cfg.extra_body)
+        # Thinking mode example
+        if cfg.thinking_mode:
+            invoke_params["extra_body"] = {
+                "thinking": True
+            }
+        response = self.llm.invoke(
+            prompt,
+            **invoke_params
+        )
+        return response.content
 
 class BaseAgent:
-    def __init__(self, name: str):
-        self.name = name
+    def __init__(self, llm):
+        self.llm = llm
 
-    async def run(
-        self,
-        task: SubTask,
-        state: RunState
-    ) -> AgentResult:
-        raise NotImplementedError
+class PlannerAgent(BaseAgent):
+    def run(self, state):
+        prompt = f"""
+        Break this goal into executable subtasks.
+        Goal:
+        {state.user_goal}
+        Return bullet points.
+        """
+        response = self.llm.generate(prompt)
+        tasks = []
+        for idx, line in enumerate(response.split("\n")):
+            if line.strip():
+                tasks.append({
+                    "task_id": f"task_{idx}",
+                    "objective": line.strip()
+                })
+        state.subtasks = tasks
+        return state
 
-    def create_result(
-        self,
-        task: SubTask,
-        output: Any,
-        confidence: float = 0.8,
-        metadata: Optional[Dict[str, Any]] = None
-    ) -> AgentResult:
+class WorkerAgent(BaseAgent):
+    def __init__(self, llm):
+        super().__init__(llm)
+        self.agent_tools = AgentTools()
+        
+        # 1. Convert your AgentTools methods into standard LangChain tools
+        self.tools = [
+            StructuredTool.from_function(
+                func=self.agent_tools.search_internet,
+                name="search_internet",
+                description="Search the internet for SAP documentation or general information.",
+                args_schema=SearchInternet, 
+            ),
+            StructuredTool.from_function(
+                func=self.agent_tools.save_documents,
+                name="save_documents",
+                description="Save extracted data, lists, or text to a local file.",
+                args_schema=SaveDocumentRequest,
+            ),
+            StructuredTool.from_function(
+                func=self.agent_tools.process_urls,
+                name="process_urls",
+                description="Scrape and extract text content from a list of web URLs.",
+            )
+        ]
+        # 2. Create an agent that automatically handles tool execution
+        # Note: We pass self.llm.llm to pass the actual ChatOllama instance
+        self.react_agent = create_react_agent(self.llm.llm, tools=self.tools)
 
-        return AgentResult(
-            task_id=task.task_id,
-            agent_name=self.name,
-            status=TaskStatus.COMPLETED,
-            output=output,
-            confidence=confidence,
-            metadata=metadata or {}
-        )
+    def run(self, task, state):
+        prompt = f"""
+        Execute this task using the tools available to you if necessary.
+
+        Task:
+        {task['objective']}
+        """
+        # 3. Run the tool-calling loop
+        response = self.react_agent.invoke({"messages": [HumanMessage(content=prompt)]})
+        # The final answer after tools have been used is the last message
+        result = response["messages"][-1].content 
+        state.results[task["task_id"]] = result
+        return result
