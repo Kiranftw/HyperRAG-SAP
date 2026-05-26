@@ -16,10 +16,24 @@ from prompts.planning import PLANNING_SYSTEM_PROMPT, NEXT_STEP_PROMPT
 
 @dataclass
 class RunState:
+    run_id: str
     user_goal: str
-    subtasks: List[dict] = field(default_factory=list)
-    results: Dict[str, str] = field(default_factory=dict)
     status: str = "running"
+    created_at: str = ""
+    updated_at: str = ""
+    current_phase: str = "planning"
+    subtasks: List[dict] = field(default_factory=list)
+    completed_tasks: List[str] = field(default_factory=list)
+    failed_tasks: List[str] = field(default_factory=list)
+    active_tasks: List[str] = field(default_factory=list)
+    worker_assignments: Dict[str, str] = field(default_factory=dict)
+    results: Dict[str, Any] = field(default_factory=dict)
+    artifacts: Dict[str, Any] = field(default_factory=dict)
+    logs: List[dict] = field(default_factory=list)
+    events: List[dict] = field(default_factory=list)
+    retries: Dict[str, int] = field(default_factory=dict)
+    shared_memory: Dict[str, Any] = field(default_factory=dict)
+    metadata: Dict[str, Any] = field(default_factory=dict)
 
 @dataclass
 class GenerationConfig:
@@ -64,7 +78,7 @@ class OllamaLLM:
         self.model_name = model_name
         self.default_config = default_config or GenerationConfig()
         self.token_tracker = TokenTrackerCallback()
-        self.llm = ChatOllama(
+        self.chat_model = ChatOllama(
             model=model_name,
             temperature=self.default_config.temperature,
             num_ctx=10000,
@@ -79,14 +93,16 @@ class OllamaLLM:
         config: Optional[GenerationConfig] = None
     ):
         if not prompt: return None
-        response = self.llm.invoke(prompt)
+        response = self.chat_model.invoke(prompt)
         return response.content
 
-class BaseAgent:
-    def __init__(self, llm):
-        self.llm = llm
+class BaseAgent(OllamaLLM):
+    def __init__(self, model_name="gpt-oss:120b-cloud", default_config: Optional[GenerationConfig] = None):
+        super().__init__(model_name=model_name, default_config=default_config)
+        # (test_query, response, print, return were removed to prevent __init__ from returning a value)
+ 
 
-class PlannerAgent(BaseAgent):
+class ManagerAgent(BaseAgent):
     def build_prompt(self, state):
         return f"""
         {PLANNING_SYSTEM_PROMPT}
@@ -135,7 +151,7 @@ class PlannerAgent(BaseAgent):
 
     def run(self, state):
         prompt = self.build_prompt(state)
-        response = self.llm.generate(prompt)
+        response = self.generate(prompt)
         try:
             parsed = json.loads(response)
             tasks = parsed.get("tasks", [])
@@ -155,8 +171,12 @@ class PlannerAgent(BaseAgent):
         return state
 
 class WorkerAgent(BaseAgent):
-    def __init__(self, llm):
-        super().__init__(llm)
+    def __init__(
+        self,
+        model_name="gpt-oss:120b-cloud",
+        default_config: Optional[GenerationConfig] = None,
+    ):
+        super().__init__(model_name=model_name, default_config=default_config)
         self.agent_tools = AgentTools()
         # 1. Automatically discover and load all tools from AgentTools!
         # LangChain reads the docstrings and type hints we just added to build the tools.
@@ -172,8 +192,7 @@ class WorkerAgent(BaseAgent):
                         pass # Skip methods that can't be converted to tools
         # 2. Create an agent that automatically handles tool execution
 
-        # Note: We pass self.llm.llm to pass the actual ChatOllama instance
-        self.react_agent = create_react_agent(self.llm.llm, tools=self.tools)
+        self.react_agent = create_react_agent(self.chat_model, tools=self.tools)
 
     def run(self, task, state):
         prompt = f"""
@@ -190,7 +209,7 @@ class WorkerAgent(BaseAgent):
         return result
 
 if __name__ == "__main__":
-    planner = PlannerAgent(OllamaLLM())
-    state = RunState(user_goal="Extract the data from the document")
+    planner = ManagerAgent()
+    state = RunState(run_id="test", user_goal="Extract the data from the document")
     planner.run(state)
     print(state.subtasks)
