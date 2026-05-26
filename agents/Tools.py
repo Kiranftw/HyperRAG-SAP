@@ -135,7 +135,15 @@ class AgentTools(AgenticRAG):
             include_images=True,
         )
         try:
-            response: Dict = SEARCH_ENGINE.invoke(query)
+            response = SEARCH_ENGINE.invoke(query)
+            if isinstance(response, str):
+                try:
+                    response = json.loads(response)
+                except Exception:
+                    response = {"results": [], "answer": response, "images": []}
+            if not isinstance(response, dict):
+                response = {"results": [], "answer": str(response), "images": []}
+
             normalized_results = []
             for item in response.get("results", []):
                 normalized_results.append({
@@ -152,6 +160,49 @@ class AgentTools(AgenticRAG):
         except Exception as e:
             return {
                 "error": str(e)
+            }
+
+    def sap_knowledge_search(self, request: SearchInternet) -> Dict:
+        """Search the local SAP knowledge base (hybrid search: ES keyword search + FAISS vector search + Cohere Reranking)."""
+        import asyncio
+        query = request.query
+        k = request.documents_count
+        
+        try:
+            loop = asyncio.get_event_loop()
+        except RuntimeError:
+            loop = None
+            
+        try:
+            if loop and loop.is_running():
+                from concurrent.futures import ThreadPoolExecutor
+                with ThreadPoolExecutor() as executor:
+                    future = executor.submit(lambda: asyncio.run(self.hybrid_search(query, k)))
+                    results = future.result()
+            else:
+                results = asyncio.run(self.hybrid_search(query, k))
+            
+            formatted_results = []
+            if results:
+                for doc in results:
+                    formatted_results.append({
+                        "title": doc.get("title", "Untitled"),
+                        "source": doc.get("source", "Unknown"),
+                        "content": doc.get("text", ""),
+                        "score": doc.get("rerank_score", doc.get("rrf_score", 0.0))
+                    })
+            return {
+                "query": query,
+                "results": formatted_results,
+                "status": "success"
+            }
+        except Exception as e:
+            LOGGER.error(f"Error during sap_knowledge_search: {e}")
+            return {
+                "query": query,
+                "results": [],
+                "error": str(e),
+                "status": "error"
             }
 
     def query_decomposition(self, request: QueryDecomposition) -> List[str]:
@@ -585,6 +636,7 @@ class AgentTools(AgenticRAG):
         except Exception as e:
             LOGGER.error(f"Failed to delete file: {str(e)}")
             return f"Error deleting file: {str(e)}"
+    
 
 if __name__ == "__main__":
     tools = AgentTools()
