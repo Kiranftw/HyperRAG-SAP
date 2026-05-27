@@ -198,14 +198,3 @@ def generate_manifest_from_files(
             ensure_ascii=False,
         )
     return manifest.model_dump()
-
-if __name__ == "__main__":
-    files = [
-        "/home/kiranftw/HyperRAG-SAP/tools/mcp_full_server.py",
-        "/home/kiranftw/HyperRAG-SAP/tools/p2p_mcp_server.py"
-    ]
-    result = generate_manifest_from_files(
-        file_paths=files,
-        output_path="generated/manifest.json",
-    )
-    print(json.dumps(result, indent=2))

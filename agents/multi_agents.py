@@ -300,66 +300,6 @@ class RetrivalAugumentedGenerationAgent(BaseAgent):
             task["error"] = str(e)
         return task
 
-class MCPToolRegistry:
-    def __init__(self):
-        self.tools: dict[str, dict] = {}
-
-    def register_tool(self, tool_manifest):
-        self.tools[tool_manifest["name"]] = tool_manifest
-
-    def get_tool(self, tool_name):
-        return self.tools.get(tool_name)
-
-    def list_tools(self):
-        return list(self.tools.values())
-
-class ManifestLoader:
-    @staticmethod
-    def load_manifest(path: str):
-        with open(path, "r", encoding="utf-8") as f:
-            return json.load(f)
-
-class MCPAgent(BaseAgent):
-    def __init__(self, model_name="gpt-oss:120b-cloud", tools=None, role="mcp", mannifest_file_path="/home/kiranftw/HyperRAG-SAP/agents/generated/manifest.json"):
-        super().__init__(model_name=model_name)
-        #so we using func from manifest pipeline "generate_manifest_from_files" to generate manifest
-        self.role = role
-        self.registery = MCPToolRegistry()
-        if manifest_file_path:
-            manifest = ManifestLoader.load_manifest(manifest_file_path)
-            for tool in manifest["tools"]:
-                self.registery.register_tool(tool)
-        self.tools = []
-        for name in RAG_TOOL_NAMES: #WE NEED TO WORK ON 
-            func = getattr(self.registery, name, None)
-            if not callable(func):
-                continue
-            try:
-                self.tools.append(StructuredTool.from_function(func))
-            except Exception:
-                LOGGER.warning(f"RAG agent: could not register tool {name}")
-        self.react_agent = create_agent(
-            model=self.chat_model,
-            tools=self.tools,
-            name="Retrieval Augmented Generation Agent",
-            debug=True,
-        )
-
-    def submit(self, task: dict) -> dict:
-        objective = task.get("objective", "")
-        LOGGER.info(f"RAG worker {self.role} executing task: {objective}")
-        try:
-            response = self.react_agent.invoke({"messages": [HumanMessage(content=objective)]})
-            messages = response.get("messages", [])
-            result = messages[-1].content if messages else "No output"
-            task["result"] = result
-            task["status"] = "done"
-        except Exception as e:
-            LOGGER.error(f"RAG worker {self.role} failed to execute task: {e}")
-            task["status"] = "failed"
-            task["error"] = str(e)
-            return task
-
         
 class WorkerPool:
     def __init__(self, model_name="gpt-oss:120b-cloud"):
