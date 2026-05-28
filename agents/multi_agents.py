@@ -15,6 +15,7 @@ from langchain_core.outputs import LLMResult
 from Tools import AgentTools, SearchInternet, SaveDocumentRequest, LOGGER
 from prompts.planning import PLANNING_SYSTEM_PROMPT, NEXT_STEP_PROMPT
 from manifest_pipeline import *
+import subprocess
 from langchain.agents import create_agent
 TOOLS = AgentTools()
 
@@ -261,33 +262,97 @@ class WorkerAgent(BaseAgent):
             task["error"] = str(e)
         return task
 
+class InfrastructureManager:
+    @staticmethod
+    def docker_compose(compose_file: str, command: str, extra_args: Optional[List[str]] = None) -> str:
+        if extra_args is None:
+            extra_args = []
+        # Dynamically build the command array
+        # Example: ["docker-compose", "-f", "path.yml", "up", "-d"]
+        full_command = ["docker-compose", "-f", compose_file, command] + extra_args
+        try:
+            LOGGER.info(f"Executing: {' '.join(full_command)}")
+            result = subprocess.run(
+                full_command,
+                capture_output=True,
+                text=True,
+                check=True
+            )
+            LOGGER.info(f"Successfully executed docker-compose {command}")
+            return result.stdout
+        except subprocess.CalledProcessError as e:
+            error_msg = f"Docker compose '{command}' failed. Reason: {e.stderr.strip()}"
+            LOGGER.error(error_msg)
+            raise RuntimeError(error_msg)
+
+    @staticmethod
+    def docker_logs(compose_file: str, service_name: str, tail: Optional[int] = None) -> str:
+        extra_args = []
+        if tail:
+            extra_args.append(f"--tail={tail}")
+        full_command = ["docker-compose", "-f", compose_file, "logs", service_name] + extra_args
+        try:
+            LOGGER.info(f"Getting logs for service '{service_name}' from '{compose_file}'...")
+            result = subprocess.run(
+                full_command,
+                capture_output=True,
+                text=True,
+                check=True  # Will raise CalledProcessError if logs command fails
+            )
+            LOGGER.info(f"Successfully retrieved logs for '{service_name}'")
+            return result.stdout
+        except subprocess.CalledProcessError as e:
+            error_msg = f"Failed to retrieve logs for '{service_name}'. Reason: {e.stderr.strip()}"
+            LOGGER.error(error_msg)
+            raise RuntimeError(error_msg)
+
 RAG_TOOL_NAMES = ("sap_knowledge_search", "query_decomposition", "search_internet")
 
 class RetrivalAugumentedGenerationAgent(BaseAgent):
-    """Dedicated worker for retrieval: local KB (hybrid_search via sap_knowledge_search), query decomposition, and web search."""
-    def __init__(self, model_name="gpt-oss:120b-cloud", tools=None, role="rag"):
+    #use hybrid_search func from rag document
+    def __init__(self,model_name="gpt-oss:120b-cloud",tools=None,role="rag_agent"):
         super().__init__(model_name=model_name)
-        self.role = role
-        self.agent_tools = tools or TOOLS
-        self.tools = []
-        for name in RAG_TOOL_NAMES:
-            func = getattr(self.agent_tools, name, None)
-            if not callable(func):
+        self.role=role
+        self.agent_tools=tools or AgentTools()
+        self.tools=[]
+        self.capabilities=[]
+        system_prompt = """You are a specialized Retrieval-Augmented Generation (RAG) Agent.
+Your objective is to answer user queries using the local SAP knowledge base, query decomposition, and web search capabilities.
+
+Follow these rules for your execution:
+1. QUERY DECOMPOSITION: If the user query is complex, multi-intent, or compares different concepts/systems, use the `query_decomposition` tool to break it down into simpler, focused sub-queries.
+2. LOCAL SEARCH: For each query or sub-query, use the `sap_knowledge_search` tool to search the local SAP knowledge base. This returns relevant chunks containing text content, source URLs, titles, and scores.
+3. WEB SEARCH: If the local search does not yield sufficient information (e.g. low relevance scores, no matches), or if the user asks for the latest/current information that may not be in the database, use the `search_internet` tool to fetch web documentation.
+4. CHUNK EVALUATION: Carefully evaluate all retrieved chunks. Filter out irrelevant chunks that do not directly address the query/sub-query. Ensure that the source content is trustworthy and relevant.
+5. RESPONSE STRUCTURE: When formatting your final response:
+   - Provide a clear, comprehensive answer.
+   - List the key chunks or reference materials used.
+   - Include specific source URLs, document titles, and IDs (if available).
+   - If Tavily search returned images, mention or include them if relevant.
+6. CLARIFICATION: If the query is ambiguous, ask the user clarifying questions.
+"""
+        for name in dir(self.agent_tools):
+            if name.startswith("_") or name == "hybrid_search":
                 continue
-            try:
-                self.tools.append(StructuredTool.from_function(func))
-            except Exception:
-                LOGGER.warning(f"RAG agent: could not register tool {name}")
-        self.react_agent = create_agent(
+            func=getattr(self.agent_tools,name)
+            if callable(func):
+                try:
+                    tool=StructuredTool.from_function(func)
+                    self.tools.append(tool)
+                    self.capabilities.append(tool.name)
+                except Exception:
+                    pass
+        self.react_agent=create_agent(
             model=self.chat_model,
             tools=self.tools,
-            name="Retrieval Augmented Generation Agent",
-            debug=True,
+            name=self.role,
+            system_prompt=system_prompt,
+            debug=True
         )
 
     def submit(self, task: dict) -> dict:
         objective = task.get("objective", "")
-        LOGGER.info(f"RAG worker {self.role} executing task: {objective}")
+        LOGGER.info(f"RAG Agent {self.role} executing task: {objective}")
         try:
             response = self.react_agent.invoke({"messages": [HumanMessage(content=objective)]})
             messages = response.get("messages", [])
@@ -295,12 +360,11 @@ class RetrivalAugumentedGenerationAgent(BaseAgent):
             task["result"] = result
             task["status"] = "done"
         except Exception as e:
-            LOGGER.error(f"RAG worker {self.role} failed to execute task: {e}")
+            LOGGER.error(f"RAG Agent {self.role} failed to execute task: {e}")
             task["status"] = "failed"
             task["error"] = str(e)
         return task
 
-        
 class WorkerPool:
     def __init__(self, model_name="gpt-oss:120b-cloud"):
         self.model_name = model_name

@@ -19,6 +19,7 @@ from langchain_community.document_loaders import (
     PyPDFLoader,
     TextLoader,
 )
+from pydantic import BaseModel
 from langchain_community.tools.tavily_search import TavilySearchResults
 from langchain_community.vectorstores import FAISS
 from langchain_core.documents import Document
@@ -38,6 +39,10 @@ from index_generation import (
 pytesseract.pytesseract.tesseract_cmd = r"/usr/bin/tesseract"
 import os
 import warnings
+
+class HybridSearch(BaseModel):
+    query: str
+    k: int = 10
 
 class AgenticRAG(FAISSIndexGeneration, HyperRetrivalAugmentedGeneration):
     def __init__(
@@ -254,9 +259,8 @@ class AgenticRAG(FAISSIndexGeneration, HyperRetrivalAugmentedGeneration):
             "faiss loaded | gpu=%s | nprobe=%s | k=%s", use_gpu, nprobe, search_k
         )
         return self.vectorstore
-
     # @tool("hybrid_search","Perform hybrid retrieval by combining sparse keyword search from Elasticsearch with dense semantic retrieval from FAISS, then rerank the merged candidates using Cohere to return the most relevant documents.")
-    async def hybrid_search(self, query: str, k: int = 10) -> Optional[List[Document]]:
+    async def hybrid_search(self, request: HybridSearch) -> Optional[List[dict]]:
         """
         Perform hybrid retrieval by combining sparse keyword search from Elasticsearch
         with dense semantic retrieval from FAISS, then rerank the merged candidates
@@ -269,27 +273,31 @@ class AgenticRAG(FAISSIndexGeneration, HyperRetrivalAugmentedGeneration):
             - RRF_Score = (1 / (60 + Rank_in_Elasticsearch)) + (1 / (60 + Rank_in_FAISS))
 
         Args:
-            query: User query text.
-            k: Number of final documents to return.
+            request: HybridSearch request object.
         Returns:
             A ranked list of relevant Document objects, or None if no results are found.
         """
+        query = request.query
         KEYWORDS_K = 30
         SEMANTIC_SEARCH_K = 30
         RERANK_K = 30  # input to Cohere
-        FINAL_K = 10  # output
+        FINAL_K = request.k  # output
         sparse_results: Any = None
         dense_results: Any = None
 
         async def run_sparse() -> Any:
             nonlocal sparse_results
-            sparse_results = await asyncio.to_thread(
-                self.es.search,
-                index="sap_knowledge_base",
-                query={"match": {"text": query}},
-                size=KEYWORDS_K,
-                _source_excludes=["embedding"],
-            )
+            try:
+                sparse_results = await asyncio.to_thread(
+                    self.es.search,
+                    index="sap_knowledge_base",
+                    query={"match": {"text": query}},
+                    size=KEYWORDS_K,
+                    _source_excludes=["embedding"],
+                )
+            except Exception as e:
+                LOGGER.warning(f"Elasticsearch search failed: {e}. Falling back to dense-only retrieval.")
+                sparse_results = {}
 
         async def run_dense():
             nonlocal dense_results
@@ -297,7 +305,6 @@ class AgenticRAG(FAISSIndexGeneration, HyperRetrivalAugmentedGeneration):
                 query,
                 k=SEMANTIC_SEARCH_K,
             )
-
         # Run both concurrently
         await asyncio.gather(run_sparse(), run_dense())
         # implementing RRF(Reciprocal Rank Fusion) and then Cohere Reranking for accuracy before inferencing
@@ -381,10 +388,3 @@ class AgenticRAG(FAISSIndexGeneration, HyperRetrivalAugmentedGeneration):
         # with open(os.path.join(os.getcwd(),"datasets","final_results.json"), "w") as f:
         #     json.dump(reranked_results, f, indent=2)
         return reranked_results
-
-
-
-if __name__ == "__main__":
-    agentic_rag = AgenticRAG()
-    query = "Explain me about the data migration strategies in SAP S/4HANA Cloud Public Edition? and Explain me about differences between SAP S/4HANA Cloud Public Edition and SAP S/4HANA Cloud Private Edition?"
-    agentic_rag.finalResponseGeneration(query)

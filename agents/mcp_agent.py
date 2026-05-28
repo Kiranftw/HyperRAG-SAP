@@ -245,22 +245,122 @@ def build_default_manifest() -> dict[str, Any]:
         output_path=MANIFEST_OUTPUT_PATH,
     )
 
-if __name__ == "__main__":
-    if not Path(MANIFEST_OUTPUT_PATH).exists():
-        build_default_manifest()
+# if __name__ == "__main__":
+#     if not Path(MANIFEST_OUTPUT_PATH).exists():
+#         build_default_manifest()
 
-    agent = MCPAgent(manifest_path=MANIFEST_OUTPUT_PATH)
-    query = "list distribution channels"
-    candidates = agent.discover_tools(query, top_k=5)
-    print("Candidate tools:")
-    #all tools that we have discovered from mco files
-    print(json.dumps(candidates, indent=2, ensure_ascii=False))
-    import asyncio
-    if candidates:
-        chosen_tool = "list_available_company_codes"
-        payload = json.dumps([{
-            "country_code": "IN"
-        }])
-        func = agent.runtime.resolver.resolve(agent.registry.get_tool(chosen_tool))
-        result = asyncio.run(func(payload))
-        print(result)
+#     agent = MCPAgent(manifest_path=MANIFEST_OUTPUT_PATH)
+#     query = "list distribution channels"
+#     candidates = agent.discover_tools(query, top_k=5)
+#     print("Candidate tools:")
+#     #all tools that we have discovered from mco files
+#     print(json.dumps(candidates, indent=2, ensure_ascii=False))
+#     import asyncio
+#     if candidates:
+#         chosen_tool = "list_available_company_codes"
+#         payload = json.dumps([{
+#             "country_code": "IN"
+#         }])
+#         func = agent.runtime.resolver.resolve(agent.registry.get_tool(chosen_tool))
+#         result = asyncio.run(func(payload))
+#         print(result)
+
+if __name__ == "__main__":
+
+    # STEP 1:
+    # Generate manifest if it does not exist
+
+    if not Path(MANIFEST_OUTPUT_PATH).exists():
+
+        LOGGER.info("Manifest does not exist. Generating manifest...")
+
+        ManifestLoader.generate_manifest(
+            mcp_files=[
+                "/home/kiranftw/HyperRAG-SAP/tools/mcp_full_server.py",
+                "/home/kiranftw/HyperRAG-SAP/tools/p2p_mcp_server.py",
+            ],
+            output_path=MANIFEST_OUTPUT_PATH,
+        )
+
+    # STEP 2:
+    # Load tools from manifest
+
+    LOGGER.info("Loading tools from manifest...")
+
+    tools = ManifestLoader.load_tools(
+        MANIFEST_OUTPUT_PATH
+    )
+
+    LOGGER.info("Loaded %d tools", len(tools))
+
+    # STEP 3:
+    # Create registry
+
+    registry = MCPToolRegistry()
+
+    # STEP 4:
+    # Register all tools
+
+    registry.register_many(tools)
+
+    LOGGER.info(
+        "Registered %d tools in registry",
+        len(registry.list_tools())
+    )
+
+    # STEP 5:
+    # Manual interactive testing
+
+    while True:
+
+        print("\n")
+        print("=" * 80)
+        print("MCP TOOL SEARCH TEST")
+        print("=" * 80)
+
+        query = input(
+            "\nEnter search query (or 'exit'): "
+        ).strip()
+
+        if query.lower() == "exit":
+            break
+
+        results = registry.search(
+            query=query,
+            top_k=5,
+        )
+
+        print("\n")
+        print(f"Top matches for: {query}")
+        print("-" * 80)
+
+        if not results:
+            print("No matching tools found.")
+            continue
+
+        for idx, tool in enumerate(results, start=1):
+
+            print(f"\n[{idx}] {tool.name}")
+
+            print(f"Description:")
+            print(f"  {tool.description}")
+
+            print(f"Module:")
+            print(f"  {tool.module}")
+
+            print(f"Function:")
+            print(f"  {tool.function_name}")
+
+            print(f"Parameters:")
+            print(
+                json.dumps(
+                    tool.parameters,
+                    indent=2,
+                    ensure_ascii=False,
+                )
+            )
+
+            print(f"Source File:")
+            print(f"  {tool.source_file}")
+
+            print("-" * 80)

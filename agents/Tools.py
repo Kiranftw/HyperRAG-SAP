@@ -17,7 +17,7 @@ import pytesseract
 import fitz  # PyMuPDF
 from typing import Dict, List, TypedDict, Literal, Optional, Any
 from pydantic import BaseModel, Field, field_validator
-from RAG.agentic_rag import AgenticRAG, HyperRetrivalAugmentedGeneration, FAISSIndexGeneration, LOGGER, ExceptionHandelling
+from RAG.agentic_rag import AgenticRAG, HybridSearch, HyperRetrivalAugmentedGeneration, FAISSIndexGeneration, LOGGER, ExceptionHandelling
 from langchain_community.document_loaders import (
     CSVLoader,
     JSONLoader,
@@ -177,10 +177,12 @@ class AgentTools(AgenticRAG):
             if loop and loop.is_running():
                 from concurrent.futures import ThreadPoolExecutor
                 with ThreadPoolExecutor() as executor:
-                    future = executor.submit(lambda: asyncio.run(self.hybrid_search(query, k)))
+                    req_obj = HybridSearch(query=query, k=k)
+                    future = executor.submit(lambda: asyncio.run(self.hybrid_search(req_obj)))
                     results = future.result()
             else:
-                results = asyncio.run(self.hybrid_search(query, k))
+                req_obj = HybridSearch(query=query, k=k)
+                results = asyncio.run(self.hybrid_search(req_obj))
             
             formatted_results = []
             if results:
