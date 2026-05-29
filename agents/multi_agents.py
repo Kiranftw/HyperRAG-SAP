@@ -262,50 +262,6 @@ class WorkerAgent(BaseAgent):
             task["error"] = str(e)
         return task
 
-class InfrastructureManager:
-    @staticmethod
-    def docker_compose(compose_file: str, command: str, extra_args: Optional[List[str]] = None) -> str:
-        if extra_args is None:
-            extra_args = []
-        # Dynamically build the command array
-        # Example: ["docker-compose", "-f", "path.yml", "up", "-d"]
-        full_command = ["docker-compose", "-f", compose_file, command] + extra_args
-        try:
-            LOGGER.info(f"Executing: {' '.join(full_command)}")
-            result = subprocess.run(
-                full_command,
-                capture_output=True,
-                text=True,
-                check=True
-            )
-            LOGGER.info(f"Successfully executed docker-compose {command}")
-            return result.stdout
-        except subprocess.CalledProcessError as e:
-            error_msg = f"Docker compose '{command}' failed. Reason: {e.stderr.strip()}"
-            LOGGER.error(error_msg)
-            raise RuntimeError(error_msg)
-
-    @staticmethod
-    def docker_logs(compose_file: str, service_name: str, tail: Optional[int] = None) -> str:
-        extra_args = []
-        if tail:
-            extra_args.append(f"--tail={tail}")
-        full_command = ["docker-compose", "-f", compose_file, "logs", service_name] + extra_args
-        try:
-            LOGGER.info(f"Getting logs for service '{service_name}' from '{compose_file}'...")
-            result = subprocess.run(
-                full_command,
-                capture_output=True,
-                text=True,
-                check=True  # Will raise CalledProcessError if logs command fails
-            )
-            LOGGER.info(f"Successfully retrieved logs for '{service_name}'")
-            return result.stdout
-        except subprocess.CalledProcessError as e:
-            error_msg = f"Failed to retrieve logs for '{service_name}'. Reason: {e.stderr.strip()}"
-            LOGGER.error(error_msg)
-            raise RuntimeError(error_msg)
-
 RAG_TOOL_NAMES = ("sap_knowledge_search", "query_decomposition", "search_internet")
 
 class RetrivalAugumentedGenerationAgent(BaseAgent):

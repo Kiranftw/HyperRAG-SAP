@@ -9,13 +9,15 @@ if rag_dir not in sys.path:
     sys.path.append(rag_dir)
 import json
 import csv
+import subprocess
 import docx
+import shlex
 import pandas as pd
 import cohere
 from PIL import Image
 import pytesseract
 import fitz  # PyMuPDF
-from typing import Dict, List, TypedDict, Literal, Optional, Any
+from typing import Dict, List, TypedDict, Literal, Optional, Any, Union, Sequence
 from pydantic import BaseModel, Field, field_validator
 from RAG.agentic_rag import AgenticRAG, HybridSearch, HyperRetrivalAugmentedGeneration, FAISSIndexGeneration, LOGGER, ExceptionHandelling
 from langchain_community.document_loaders import (
@@ -102,6 +104,10 @@ class SaveDocumentRequest(BaseModel):
     filename: str = Field(..., description="The name of the file to save, e.g., 'report.json' or 'guide.txt'")
     data: Any = Field(..., description="The content/data to save (raw string, list, or JSON dictionary)")
 
+class CommandRequest(BaseModel):
+    command: str = Field(..., description="The shell command to execute, e.g. 'docker-compose up -d'")
+    timeout: int = Field(default=120, description="Max seconds to wait before killing the command")
+
 MODEL = ChatNVIDIA(
     model="moonshotai/kimi-k2-instruct",
     api_key=os.getenv("NVIDIA_API_KEY"),
@@ -109,6 +115,24 @@ MODEL = ChatNVIDIA(
     top_p=0.9,
     max_completion_tokens=16384,
 )
+ALLOWED_COMMANDS = {"python", "python3", "pytest", "git", "npm", "node", "pip", "powershell", "cmd", "bash", "sh", "uv", "pnpm", "ls", "cd", "pwd", "mkdir", "rm", "touch", "echo", "curl", "docker", "docker-compose", "kubectl", "minikube"}
+FORBIDDEN_TOKENS = {"&", "|", ";", "`", "$(", ">", "<"}
+
+def _normalize_command(command: Union[str, Sequence[str]]) -> List[str]:
+    if isinstance(command, str):
+        if any(tok in command for tok in FORBIDDEN_TOKENS):
+            raise ValueError("Shell operators are not allowed.")
+        arguments = shlex.split(command, posix=(os.name != "nt"))
+    else:
+        arguments = list(command)
+    if not arguments:
+        raise ValueError("Empty command.")
+    exe = os.path.basename(arguments[0]).lower()
+    if exe.endswith(".exe"):
+        exe = exe[:-4]
+    if exe not in ALLOWED_COMMANDS:
+        raise ValueError(f"Command '{arguments[0]}' is not allowed.")
+    return arguments
 
 class AgentTools(AgenticRAG):
     def __init__(self):
@@ -638,8 +662,53 @@ class AgentTools(AgenticRAG):
         except Exception as e:
             LOGGER.error(f"Failed to delete file: {str(e)}")
             return f"Error deleting file: {str(e)}"
-    
+
+    def run_command(self, request: CommandRequest) -> Dict:
+        """Execute an allowed command safely and return stdout/stderr."""
+        try:
+            args = _normalize_command(request.command)
+            result = subprocess.run(
+                args,
+                shell=False,
+                capture_output=True,
+                text=True,
+                timeout=request.timeout,
+                cwd=getattr(self, "workspace_dir", None),
+                # setting the env to make sure that we can run the command in the container
+                # NOTE this env is for local development only
+                env={
+                    "PATH": os.environ.get("PATH", ""),
+                    "HOME": os.environ.get("HOME", ""),
+                    "USERPROFILE": os.environ.get("USERPROFILE", ""),
+                },
+            )
+            return {
+                "stdout": result.stdout,
+                "stderr": result.stderr,
+                "exit_code": result.returncode,
+            }
+        except subprocess.TimeoutExpired:
+            return {
+                "stdout": "",
+                "stderr": f"Command timed out after {request.timeout}s",
+                "exit_code": -1,
+            }
+        except Exception as e:
+            LOGGER.error(f"Failed to run command: {e}")
+            return {
+                "stdout": "",
+                "stderr": f"Error running command: {e}",
+                "exit_code": -1,
+            }
 
 if __name__ == "__main__":
     tools = AgentTools()
-    print(tools.process_urls(["https://www.sap.com/resources/what-are-ai-agents"]))
+    test_command = "docker-compose -f ../docker-compose.yaml up -d"
+    print(f"Running: {test_command}")
+    result = tools.run_command(CommandRequest(command=test_command, timeout=60))
+    
+    print("\n--- STDOUT ---")
+    print(result["stdout"])
+    print("--- STDERR ---")
+    print(result["stderr"])
+    print(f"Exit Code: {result['exit_code']}")
