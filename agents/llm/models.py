@@ -179,8 +179,3 @@ class SAPLLM:
         except Exception as e:
             LOGGER.error(f"Failed to track tokens for SAPLLM: {e}")
         return response.orchestration_result.choices[0].message.content
-
-if __name__ == "__main__":
-    llm = SAPLLM()
-    data = llm.generate("Hello, how are you?")
-    print(data)
