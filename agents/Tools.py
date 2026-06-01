@@ -4,7 +4,7 @@ import sys
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if parent_dir not in sys.path:
     sys.path.append(parent_dir)
-rag_dir = os.path.join(parent_dir, "RAG")
+rag_dir = os.path.join(parent_dir, "rag")
 if rag_dir not in sys.path:
     sys.path.append(rag_dir)
 import json
@@ -19,7 +19,7 @@ import pytesseract
 import fitz  # PyMuPDF
 from typing import Dict, List, TypedDict, Literal, Optional, Any, Union, Sequence
 from pydantic import BaseModel, Field, field_validator
-from RAG.agentic_rag import AgenticRAG, HybridSearch, HyperRetrivalAugmentedGeneration, FAISSIndexGeneration, LOGGER, ExceptionHandelling
+from rag.agentic_rag import AgenticRAG, HybridSearch, HyperRetrivalAugmentedGeneration, FAISSIndexGeneration, LOGGER, ExceptionHandelling
 from langchain_community.document_loaders import (
     CSVLoader,
     JSONLoader,
@@ -184,51 +184,6 @@ class AgentTools(AgenticRAG):
         except Exception as e:
             return {
                 "error": str(e)
-            }
-
-    def sap_knowledge_search(self, request: SearchInternet) -> Dict:
-        """Search the local SAP knowledge base (hybrid search: ES keyword search + FAISS vector search + Cohere Reranking)."""
-        import asyncio
-        query = request.query
-        k = request.documents_count
-        
-        try:
-            loop = asyncio.get_event_loop()
-        except RuntimeError:
-            loop = None
-            
-        try:
-            if loop and loop.is_running():
-                from concurrent.futures import ThreadPoolExecutor
-                with ThreadPoolExecutor() as executor:
-                    req_obj = HybridSearch(query=query, k=k)
-                    future = executor.submit(lambda: asyncio.run(self.hybrid_search(req_obj)))
-                    results = future.result()
-            else:
-                req_obj = HybridSearch(query=query, k=k)
-                results = asyncio.run(self.hybrid_search(req_obj))
-            
-            formatted_results = []
-            if results:
-                for doc in results:
-                    formatted_results.append({
-                        "title": doc.get("title", "Untitled"),
-                        "source": doc.get("source", "Unknown"),
-                        "content": doc.get("text", ""),
-                        "score": doc.get("rerank_score", doc.get("rrf_score", 0.0))
-                    })
-            return {
-                "query": query,
-                "results": formatted_results,
-                "status": "success"
-            }
-        except Exception as e:
-            LOGGER.error(f"Error during sap_knowledge_search: {e}")
-            return {
-                "query": query,
-                "results": [],
-                "error": str(e),
-                "status": "error"
             }
 
     def query_decomposition(self, request: QueryDecomposition) -> List[str]:
@@ -666,6 +621,7 @@ class AgentTools(AgenticRAG):
     def run_command(self, request: CommandRequest) -> Dict:
         """Execute an allowed command safely and return stdout/stderr."""
         try:
+            #subprocess run commands in detached mode without stdin, stdout, stderr attached to the subprocess (headless)
             args = _normalize_command(request.command)
             result = subprocess.run(
                 args,
