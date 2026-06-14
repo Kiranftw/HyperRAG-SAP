@@ -60,7 +60,8 @@ class BaseAgent(OllamaLLM):
         super().__init__(model_name=model_name, default_config=default_config)
 
 class ManagerAgent(BaseAgent):
-    def build_plan_prompt(self, state: RunState) -> str:
+    def build_plan_prompt(self, state: RunState, tool_manifest: str = "") -> str:
+        tools_context = f"\nAvailable Tools:\n{tool_manifest}\n" if tool_manifest else ""
         return f"""{PLANNING_SYSTEM_PROMPT}
             User Goal:
             {state.user_goal}
@@ -72,7 +73,7 @@ class ManagerAgent(BaseAgent):
             - Current status: {state.status}
             - Retry count: {state.retry_count}
             - Retrieved documents: {len(state.retrieved_documents)}
-            - Retrieved memories: {len(state.retrieved_memories)}
+            - Retrieved memories: {len(state.retrieved_memories)}{tools_context}
             Task:
             Create a structured execution plan for this goal.
             Requirements:
@@ -130,8 +131,14 @@ class ManagerAgent(BaseAgent):
             })
         return normalized
 
-    def plan(self, state: RunState) -> RunState:
-        prompt = self.build_plan_prompt(state)
+    def plan(self, state: RunState, tool_registry: Optional[Any] = None) -> RunState:
+        # Build the tool manifest from the registry so the LLM knows what's available
+        inbuilt_tools_manifest: List[dict] = []
+        if tool_registry:
+            inbuilt_tools_manifest = tool_registry.build_tool_manifest()
+            LOGGER.info(f"Loaded len({len(inbuilt_tools_manifest)}), tools manifest: {inbuilt_tools_manifest}")
+
+        prompt = self.build_plan_prompt(state, inbuilt_tools_manifest)
         response = self.generate(prompt=prompt)
         LOGGER.info(f"Planning response: {response}")
         try:
@@ -206,9 +213,9 @@ class ManagerAgent(BaseAgent):
     def is_complete(self, state: RunState) -> bool:
         return len(state.plan) > 0 and all(t["status"] == "done" for t in state.plan)
 
-    def run(self, state: RunState, worker_pool: Any) -> RunState:
+    def run(self, state: RunState, worker_pool: Any, tool_registry: Optional[Any] = None) -> RunState:
         if not state.plan:
-            state = self.plan(state)
+            state = self.plan(state, tool_registry)
         if self.is_complete(state):
             state.status = "complete"
             return state
@@ -219,10 +226,43 @@ class ManagerAgent(BaseAgent):
             state.status = "running"
         return state
 
+class ToolRegistry:
+    def __init__(self, agent_tools: Optional[AgentTools] = None):
+        self._agent_tools = agent_tools or TOOLS
+        self.tools: Dict[str, Dict[str, Any]] = {}
+        self._discover()
+    def _discover(self) -> None:
+        #discover only public methods defined directly on AgentTools (not inherited from AgenticRAG):
+        import inspect
+        own_methods = set(AgentTools.__dict__.keys())
+        for name, method in inspect.getmembers(self._agent_tools, predicate=inspect.ismethod):
+            if name.startswith("_"):
+                continue
+            if name not in own_methods:
+                continue
+            self.tools[name] = {
+                "name": name,
+                "description": inspect.getdoc(method) or "No description",
+                "callable": method,
+            }
+    def get(self, name: str):
+        return self.tools.get(name)
+    def list_tools(self) -> List[str]:
+        return list(self.tools.keys())
+    def build_tool_manifest(self) -> str:
+        manifest = []
+        for name, tool in self.tools.items():
+            manifest.append({
+                "name": tool["name"],
+                "description": tool["description"],
+            })
+        return json.dumps(manifest, indent=2)  
+
 def main():
     question = input("Enter your question: ").strip()
     document_context = input("Paste document text or leave blank: ").strip()
     manager = ManagerAgent()
+    registry = ToolRegistry()
     state = RunState(
         run_id="run_001",
         user_goal=question,
@@ -230,15 +270,12 @@ def main():
     )
     if document_context:
         state.working_memory["document_context"] = document_context
-    state = manager.plan(state)
-    print("\n=== GOAL ANALYSIS ===")
+    state = manager.plan(state, registry)
     print(json.dumps(state.working_memory.get("goal_analysis", {}), indent=2))
-    print("\n=== EXECUTION STRATEGY ===")
     print(json.dumps(state.working_memory.get("execution_strategy", {}), indent=2))
-    print("\n=== PLAN ===")
     print(json.dumps(state.plan, indent=2))
     return state
 
 if __name__ == "__main__":
     state = main()
-    LOGGER.info(state)
+    print(state)

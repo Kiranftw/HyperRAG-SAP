@@ -22,6 +22,7 @@ Core planning rules:
 - Create tasks that are atomic and independently executable.
 - Do not combine unrelated actions into one task.
 - Keep the order logical and dependency-aware.
+- Evaluate the 'Available Tools' to map tasks to appropriate worker_types or specific tools.
 - Include verification-oriented tasks when the task may fail silently.
 - Prefer fewer, clearer tasks over many vague tasks.
 - If the user uploaded a document, always include a document ingestion or document reading task first.

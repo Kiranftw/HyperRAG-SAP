@@ -31,7 +31,6 @@ from langchain_community.document_loaders import (
     UnstructuredMarkdownLoader,
     UnstructuredHTMLLoader
 )
-from langchain_community.tools.tavily_search import TavilySearchResults
 from langchain_community.vectorstores import FAISS
 from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
@@ -39,7 +38,6 @@ from langchain_core.output_parsers import SimpleJsonOutputParser
 from langchain_huggingface import HuggingFaceEmbeddings
 from elasticsearch import Elasticsearch, helpers
 from langchain_ollama import ChatOllama
-from PIL import Image
 import requests
 from bs4 import BeautifulSoup
 from dotenv import find_dotenv, load_dotenv
@@ -48,7 +46,7 @@ from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_nvidia_ai_endpoints import ChatNVIDIA
 from langgraph.graph import END, StateGraph
 from langchain_tavily import TavilySearch
-from langchain_community.document_loaders import PyMuPDFLoader, TextLoader, Docx2txtLoader
+from langchain_community.document_loaders import PyMuPDFLoader
 load_dotenv(find_dotenv())
 
 ALLOWED_FILE_TYPES = {
@@ -103,8 +101,10 @@ class QueryDecomposition(BaseModel):
 class SaveDocumentRequest(BaseModel):
     filename: str = Field(..., description="The name of the file to save, e.g., 'report.json' or 'guide.txt'")
     data: Any = Field(..., description="The content/data to save (raw string, list, or JSON dictionary)")
+    font_family: str = Field(default="Arial, sans-serif", description="Optional font family for PDF output")
+    font_size: str = Field(default="14px", description="Optional font size for PDF output")
 
-class CommandRequest(BaseModel):
+class TerminalCommandRequest(BaseModel):
     command: str = Field(..., description="The shell command to execute, e.g. 'docker-compose up -d'")
     timeout: int = Field(default=120, description="Max seconds to wait before killing the command")
 
@@ -261,25 +261,26 @@ class AgentTools(AgenticRAG):
                             f.write(str(request.data))
 
             elif ext == ".pdf":
-                doc = fitz.open()
+                import markdown
+                from weasyprint import HTML
                 text_content = str(request.data)
-                lines = text_content.split("\n")
-                page = doc.new_page()
-                margin_left = 50
-                margin_top = 50
-                line_height = 15
-                page_height = page.rect.height
-
-                y = margin_top
-                for line in lines:
-                    if y + line_height > page_height - 50:
-                        page = doc.new_page()
-                        y = margin_top
-                    page.insert_text((margin_left, y), line, fontsize=10)
-                    y += line_height
-
-                doc.save(filepath)
-                doc.close()
+                font_family = getattr(request, 'font_family', 'Arial, sans-serif')
+                font_size = getattr(request, 'font_size', '14px')
+                # Convert Markdown to HTML
+                html_content = markdown.markdown(text_content, extensions=['tables', 'fenced_code'])
+                # Basic styling for the PDF
+                css_style = f"""
+                    body {{ font-family: {font_family}; font-size: {font_size}; padding: 20px; line-height: 1.6; color: #333; }}
+                    h1, h2, h3 {{ color: #0056b3; }}
+                    table {{ border-collapse: collapse; width: 100%; margin-bottom: 20px; }}
+                    th, td {{ border: 1px solid #ddd; padding: 8px; text-align: left; }}
+                    th {{ background-color: #f2f2f2; }}
+                    code {{ background-color: #f8f9fa; padding: 2px 4px; border-radius: 4px; }}
+                    pre {{ background-color: #f8f9fa; padding: 15px; border-radius: 4px; overflow-x: auto; }}
+                """
+                full_html = f"<html><head><style>{css_style}</style></head><body>{html_content}</body></html>"
+                # Generate PDF
+                HTML(string=full_html).write_pdf(filepath)
             elif ext == ".docx":
                 doc = docx.Document()
                 text_content = str(request.data)
@@ -574,52 +575,8 @@ class AgentTools(AgenticRAG):
         #[('Page 1', <PIL.Image.Image image mode=L size=2480x3509 at 0x7FB7F4F751E0>)]
         return targets
     
-    def create_directory(self, directory_name: str) -> str:
-        """Create a new directory on the local filesystem."""
-        try:
-            if os.path.exists(directory_name):
-                LOGGER.info(f"Directory already exists: {directory_name}")
-                return f"Directory already exists: {directory_name}"
-            os.makedirs(directory_name)
-            LOGGER.info(f"Directory created: {directory_name}")
-            return f"Directory created successfully: {directory_name}"
-        except Exception as e:
-            LOGGER.error(f"Failed to create directory: {str(e)}")
-            return f"Error creating directory: {str(e)}"
-
-    def move_file(self, filename: str, directory_name: str) -> str:
-        """Move a file to a new directory on the local filesystem."""
-        try:
-            if not os.path.exists(filename):
-                return f"File does not exist: {filename}"
-            if not os.path.exists(directory_name):
-                return f"Directory does not exist: {directory_name}"
-            destination=os.path.join(
-                directory_name,
-                os.path.basename(filename)
-            )
-            shutil.move(filename,destination)
-            LOGGER.info(f"Moved file {filename} -> {destination}")
-            return f"File moved successfully to: {destination}"
-        except Exception as e:
-            LOGGER.error(f"Failed to move file: {str(e)}")
-            return f"Error moving file: {str(e)}"
-
-    def delete_file(self, filename: str) -> str:
-        """Delete a file from the local filesystem."""
-        try:
-            filesize = os.path.getsize(filename)
-            if not os.path.exists(filename):
-                return f"File does not exist: {filename}"
-            os.remove(filename)
-            LOGGER.info(f"Deleted file: {filename} with size {filesize}MB")
-            return f"File deleted successfully: {filename} with size {filesize}MB"
-        except Exception as e:
-            LOGGER.error(f"Failed to delete file: {str(e)}")
-            return f"Error deleting file: {str(e)}"
-
-    def run_command(self, request: CommandRequest) -> Dict:
-        """Execute an allowed command safely and return stdout/stderr."""
+    def execute_terminal_command(self, request: TerminalCommandRequest) -> Dict:
+        """Execute an allowed terminal shell command safely and return stdout/stderr."""
         try:
             #subprocess run commands in detached mode without stdin, stdout, stderr attached to the subprocess (headless)
             args = _normalize_command(request.command)
@@ -656,15 +613,3 @@ class AgentTools(AgenticRAG):
                 "stderr": f"Error running command: {e}",
                 "exit_code": -1,
             }
-
-if __name__ == "__main__":
-    tools = AgentTools()
-    test_command = "docker-compose -f ../docker-compose.yaml up -d"
-    print(f"Running: {test_command}")
-    result = tools.run_command(CommandRequest(command=test_command, timeout=60))
-    
-    print("\n--- STDOUT ---")
-    print(result["stdout"])
-    print("--- STDERR ---")
-    print(result["stderr"])
-    print(f"Exit Code: {result['exit_code']}")

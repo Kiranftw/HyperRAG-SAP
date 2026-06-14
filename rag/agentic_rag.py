@@ -61,22 +61,6 @@ class AgenticRAG(FAISSIndexGeneration, HyperRetrivalAugmentedGeneration):
             num_ctx=10000,
             # base_url="http://localhost:11434",
         )
-        TAVILY_MAX_RESULTS = 20
-        self.SEARCH_ENGINE = TavilySearchResults(
-            tavily_api_key=os.getenv("TAVILY_API_KEY"),
-            max_results=TAVILY_MAX_RESULTS,
-            include_answer=True,
-            include_raw_content=True,
-            include_tables=True,
-            include_domains=[
-                "help.sap.com",
-                "www.sap.com",
-                "developers.sap.com",
-                "api.sap.com",
-                "community.sap.com",
-            ],
-            include_images=True,
-        )
         # Call dirname twice: once to get the directory of the file (src), and once to get its parent (root)
         self.ROOT: str = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         self.parser = SimpleJsonOutputParser()

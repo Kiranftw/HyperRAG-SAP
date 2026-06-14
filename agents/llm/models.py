@@ -147,6 +147,7 @@ class SAPLLM:
             name=self.model_name,
             parameters={
                 "temperature": config.temperature,
+                "max_tokens": config.max_tokens,
             }
         )
         orchestration_config = OrchestrationConfig(
