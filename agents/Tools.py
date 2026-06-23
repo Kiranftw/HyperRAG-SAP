@@ -537,45 +537,8 @@ class AgentTools(AgenticRAG):
         else:
             LOGGER.error("UNSUPPORTED FILE TYPE!")
             return ""
-
-    @ExceptionHandelling
-    # scanning the file using ocr for the pdf, txt, docx, png, jpg, jpeg, tiff, bmp, gif files 
-    # and returns the list of tuples of (page_name, image)
-    def scan_file(self, filepath: str) -> list:
-        """Scan a file (PDF or image) to extract raw pages and images for vision processing."""
-        if not os.path.exists(filepath):
-            LOGGER.error(f"ERROR FILE NOT FOUND: {filepath}")
-            return []
-        extinction = os.path.splitext(filepath)[1].lower()
-        targets = []
-        if extinction == '.pdf':
-            LOGGER.info(f"PROCESSING PDF: {filepath}")
-            import fitz  # PyMuPDF
-            doc = fitz.open(filepath)
-            for i, page in enumerate(doc):
-                pix = page.get_pixmap(dpi=300)
-                mode = "RGB" if pix.alpha == 0 else "RGBA"
-                img = Image.frombytes(mode, [pix.width, pix.height], pix.samples)
-                img = img.convert('L')
-                targets.append((f"Page {i+1}", img))
-            doc.close()
-            LOGGER.info(f"PDF PROCESSED SUCCESSFULLY: {filepath}")
-        elif extinction in ['.png', '.jpg', '.jpeg']:
-            LOGGER.info(f"PROCESSING IMAGE: {filepath}")
-            try:
-                img = Image.open(filepath).convert('L')
-                targets.append(("Image", img))
-                LOGGER.info(f"IMAGE PROCESSED SUCCESSFULLY: {filepath}")
-            except Exception as e:
-                LOGGER.error(f"ERROR PROCESSING IMAGE {filepath}: {e}")
-                return []
-        else:
-            LOGGER.error(f"UNSUPPORTED FILE TYPE: {filepath}")
-            return []
-        #[('Page 1', <PIL.Image.Image image mode=L size=2480x3509 at 0x7FB7F4F751E0>)]
-        return targets
     
-    def execute_terminal_command(self, request: TerminalCommandRequest) -> Dict:
+    def bash(self, request: TerminalCommandRequest) -> Dict:
         """Execute an allowed terminal shell command safely and return stdout/stderr."""
         try:
             #subprocess run commands in detached mode without stdin, stdout, stderr attached to the subprocess (headless)
