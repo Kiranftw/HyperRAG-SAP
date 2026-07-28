@@ -31,7 +31,6 @@ from langchain_community.document_loaders import (
     UnstructuredMarkdownLoader,
     UnstructuredHTMLLoader
 )
-from langchain_community.vectorstores import FAISS
 from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
 from langchain_core.output_parsers import SimpleJsonOutputParser
@@ -46,7 +45,7 @@ from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_nvidia_ai_endpoints import ChatNVIDIA
 from langgraph.graph import END, StateGraph
 from langchain_tavily import TavilySearch
-from langchain_community.document_loaders import PyMuPDFLoader
+from langchain_opendataloader_pdf import OpenDataLoaderPDFLoader
 load_dotenv(find_dotenv())
 
 ALLOWED_FILE_TYPES = {
@@ -494,26 +493,9 @@ class AgentTools(AgenticRAG):
         filename: str = os.path.basename(filepath)
 
         if filename.lower().endswith('.pdf'):
-            loader: PyMuPDFLoader = PyMuPDFLoader(filepath)
+            loader: OpenDataLoaderPDFLoader = OpenDataLoaderPDFLoader(filepath)
             documents = loader.load()
             extracted_data = '\n'.join(doc.page_content for doc in documents)
-            # If no PDF), use OCR with PyMuPDF
-            if len(extracted_data.strip()) < 50:
-                LOGGER.info("NO TEXT EXTRAC-TED FROM PDF, USING OCR...(SCANNED PDF)")
-                doc = fitz.open(filepath)
-                ocr_texts = []
-                for page_num in range(len(doc)):
-                    page = doc[page_num]
-                    # Convert page to image at 300 DPI
-                    pix = page.get_pixmap(matrix=fitz.Matrix(300/72, 300/72))
-                    img = Image.frombytes("RGB", (pix.width, pix.height), pix.samples)
-                    # OCR the image
-                    text = pytesseract.image_to_string(img, lang='eng')
-                    ocr_texts.append(text)
-                    LOGGER.info(f"OCR page {page_num + 1}: EXTRACTED {len(text)} CHARACTERS")
-                doc.close()
-                extracted_data = '\n\n'.join(ocr_texts)
-                LOGGER.info(f"TOTAL OCR CHARACTERS: {len(extracted_data)} CHARACTERS")
             return extracted_data
     
         elif filename.lower().endswith('.txt'):
@@ -576,3 +558,9 @@ class AgentTools(AgenticRAG):
                 "stderr": f"Error running command: {e}",
                 "exit_code": -1,
             }
+
+if __name__ == "__main__":
+    tools = AgentTools()
+    filepath = "/home/kiranftw/HyperRAG-SAP/datasets/test_report.pdf"
+    data = tools.read_file(filepath)
+    print(data)

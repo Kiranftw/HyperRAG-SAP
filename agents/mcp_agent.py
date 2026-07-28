@@ -70,7 +70,7 @@ class ManifestLoader:
         with open(path, "r", encoding="utf-8") as f:
             return json.load(f)
     @staticmethod
-    def load_tools(path: str | Path) -> list[ToolManifest]:
+    def load_tools(path: str | Path) -> list[ToolManifest]:\
         manifest = ManifestLoader.load_manifest(path)
         tools: list[ToolManifest] = []
         for tool in manifest.get("tools", []):
