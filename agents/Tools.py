@@ -185,49 +185,6 @@ class AgentTools(AgenticRAG):
                 "error": str(e)
             }
 
-    def query_decomposition(self, request: QueryDecomposition) -> List[str]:
-        """Decompose a complex query into simpler sub-queries for better retrieval."""
-        # Load decomposition prompt
-        with open(
-            os.path.join(self.ROOT, "prompts", "query_decomposition.txt"), "r"
-        ) as file:
-            decomposition_prompt = file.read()
-        # Fill the prompt with the user query
-        decomposition_prompt = decomposition_prompt.replace(
-            "{USER_QUERY_GOES_HERE}", request.query
-        )
-        try:
-            DECOMPOSITION_QUERIES_COUNT: int = request.queries_count
-            client = getattr(self, "cohere_reranker", None) or cohere.ClientV2(
-                os.getenv("COHERE_API_KEY")
-            )
-            response = client.chat(
-                model="command-r-plus",
-                messages=[
-                    {
-                        "role": "system",
-                        "content": decomposition_prompt
-                        + f"The number of queries should be {DECOMPOSITION_QUERIES_COUNT}",
-                    },
-                    {"role": "user", "content": request.query},
-                ],
-                response_format={"type": "json_object"},
-                temperature=0.7,
-            )
-            # Parse the JSON response
-            content = response.message.content[0].text
-            # Sometimes LLMs wrap JSON in markdown blocks
-            if content.startswith("```json"):
-                content = content.replace("```json\n", "").replace("```", "").strip()
-            elif content.startswith("```"):
-                content = content.replace("```\n", "").replace("```", "").strip()
-            parsed_json = json.loads(content)
-            sub_queries = parsed_json.get("sub_queries", [request.query])
-            return sub_queries
-        except Exception as e:
-            print(f"Error during query decomposition: {e}")
-            return [request.query]
-
     def write_file(self, request: SaveDocumentRequest) -> Dict:
         """Save extracted data, lists, or text to a local file (supports JSON, PDF, DOCX, XLSX, CSV, TXT)."""
         try:
@@ -558,9 +515,3 @@ class AgentTools(AgenticRAG):
                 "stderr": f"Error running command: {e}",
                 "exit_code": -1,
             }
-
-if __name__ == "__main__":
-    tools = AgentTools()
-    filepath = "/home/kiranftw/HyperRAG-SAP/datasets/test_report.pdf"
-    data = tools.read_file(filepath)
-    print(data)

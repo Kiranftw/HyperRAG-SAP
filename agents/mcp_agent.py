@@ -244,23 +244,3 @@ def build_default_manifest() -> dict[str, Any]:
         ],
         output_path=MANIFEST_OUTPUT_PATH,
     )
-
-# if __name__ == "__main__":
-#     if not Path(MANIFEST_OUTPUT_PATH).exists():
-#         build_default_manifest()
-
-#     agent = MCPAgent(manifest_path=MANIFEST_OUTPUT_PATH)
-#     query = "list distribution channels"
-#     candidates = agent.discover_tools(query, top_k=5)
-#     print("Candidate tools:")
-#     #all tools that we have discovered from mco files
-#     print(json.dumps(candidates, indent=2, ensure_ascii=False))
-#     import asyncio
-#     if candidates:
-#         chosen_tool = "list_available_company_codes"
-#         payload = json.dumps([{
-#             "country_code": "IN"
-#         }])
-#         func = agent.runtime.resolver.resolve(agent.registry.get_tool(chosen_tool))
-#         result = asyncio.run(func(payload))
-#         print(result)
