@@ -7,6 +7,25 @@ from pathlib import Path
 from typing import Any, Optional, Union
 from pydantic import BaseModel, Field
 
+
+def normalize_file_path(path: str | os.PathLike[str]) -> str:
+    """Return an absolute local path, accepting Linux and WSL UNC paths."""
+    value = os.fspath(path).strip()
+    if not value:
+        raise ValueError("File path cannot be empty")
+
+    # Convert paths such as \\wsl.localhost\Ubuntu-22.04\home\user\file.py
+    # and \\wsl$\Ubuntu-22.04\home\user\file.py to their Linux equivalent.
+    windows_value = value.replace("\\", "/")
+    if windows_value.startswith("//wsl.localhost/") or windows_value.startswith("//wsl$/"):
+        parts = windows_value.split("/", 4)
+        value = "/" + parts[4] if len(parts) == 5 else "/"
+    else:
+        value = windows_value
+
+    return str(Path(value).expanduser().resolve())
+
+
 class ParameterSchema(BaseModel):
     name: str
     type: str = "Any"
@@ -27,7 +46,7 @@ class ManifestOutput(BaseModel):
     total_tools: int
     tools: list[ToolManifest]
     skipped_files: list[str] = Field(default_factory=list)
-    errors: list[dict] = Field(default_fakctory=list)
+    errors: list[dict] = Field(default_factory=list)
 
 def get_annotation(annotation_node) -> str:
     if annotation_node is None:

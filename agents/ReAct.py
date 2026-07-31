@@ -59,23 +59,21 @@ class ToolRegistry:
         return json.dumps(manifest, indent=2)
 
 def test():
-    question = input("Enter your question: ").strip()
-    document_context = input("Paste document text or leave blank: ").strip()
+    path = r"\\wsl.localhost\Ubuntu-22.04\home\kiranftw\sap-cloud-alm-ai\mcp\cloud_alm_mcp.py"
+    path = normalize_file_path(path)
+    manifestpath = "/home/kiranftw/HyperRAG-SAP/agents/manifest.json"
+    data = generate_manifest_from_files([path], manifestpath)
+    return data
+    paths_raw = input(
+        "Enter MCP file path(s) (comma-separated; Windows/WSL UNC/Linux paths supported): "
+    ).strip()
     tool_manifest_files = [
-        "/home/kiranftw/HyperRAG-SAP/tools/p2p_mcp_server.py",
-        "/home/kiranftw/HyperRAG-SAP/tools/mcp_full_server.py"
+        "\\wsl.localhost\Ubuntu-22.04\home\kiranftw\sap-cloud-alm-ai\mcp\cloud_alm_mcp.py"
     ]
     manifestpath = "/home/kiranftw/HyperRAG-SAP/agents/manifest.json"
     data = generate_manifest_from_files(tool_manifest_files, manifestpath)
-    tool_info = [
-        {
-            "name": tool.get("name"),
-            "description": tool.get("description")
-        }
-        for tool in data.get("tools", [])
-    ]
-    agent = ReActAgent()
-    registry = ToolRegistry()
+    return data
+    
 
 if __name__ == "__main__":
     state = test()
